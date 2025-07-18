@@ -1,0 +1,21 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  width: 400px;
+  margin: 0 auto;
+}
+
+.form input, .form textarea {
+  background-color: rgba(0,0,0,0.05);
+  border: none;
+  min-height: 30px;
+  margin: .25rem 0 .5rem;
+}
+
+.form button[type="submit"] {
+  border: none;
+  padding: .5rem;
+  background-color: teal;
+  color: #fff;
+}

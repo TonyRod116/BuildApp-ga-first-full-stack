@@ -4,18 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to BuildApp</title>
+    <link rel="stylesheet" href="/stylesheets/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Pacifico&family=Press+Start+2P&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body class="home-body">
+  <video autoplay muted loop id="bg-video">
+    <source src="/media/home_bg.mp4" type="video/mp4">
+  </video>
   <%- include('partials/home_header') %>
-  <section class="home-content">
-    <h1>Welcome to BuildApp</h1>
-    <h3>The future of construction is here</h3>
-    <h3>Let's build it together</h3>
-  </section>
-  <section class="choose-role">
-    <p><button class="choose-role-button">I´m a<br>Client</button></p>
-    <p><button class="choose-role-button">I´m a<br>Professional</button></p>
-  </section>
+  <div>
+    <h1 class="home-buildapp-title">Welcome to BuildApp</h1>
+    <p class="home-content-slogan">The future of construction is here, <br>let's build it together!</p>
+  </div>
+  <div class="choose-role">
+    <p><button class="choose-role-button"><a href="/pros/list">I´m a<br>Client</a></button></p>
+    <p><button class="choose-role-button"><a href="/auth/professional">I´m a<br>Professional</a></button></p>
+  </div>
 
     <%- include('partials/footer') %>
 </body>

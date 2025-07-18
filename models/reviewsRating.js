@@ -11,3 +11,5 @@ const reviewsRatingSchema = new mongoose.Schema({
 })
 
 const ReviewsRating = mongoose.model('ReviewsRating', reviewsRatingSchema)
+
+export default ReviewsRating

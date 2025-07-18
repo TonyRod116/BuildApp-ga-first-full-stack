@@ -8,6 +8,9 @@ import session from 'express-session'
 import MongoStore from "connect-mongo"
 import { library, icon } from '@fortawesome/fontawesome-svg-core'
 
+import authRouter from './controllers/auth.js'
+import { showProsList } from './controllers/client.js'
+
 
 
 
@@ -20,6 +23,7 @@ const app = express()
 const port = process.env.PORT || 3000
 
 // *Middleware section
+app.set('view engine', 'ejs')
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: false }))
 app.use(methodOverride('_method'))
@@ -40,6 +44,12 @@ app.use(session({
 app.get('/', (req, res) => {
   res.render('index.ejs')
 })
+
+// Router files 
+app.use('/auth', authRouter)
+
+// Client routes
+app.get('/pros/list', showProsList)
 
 
 //* -------- Server Section --------

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Professionls Near You</title>
+    <%- include('../partials/client_head') %>
+</head>
+<body>
+    <%- include('../partials/client_header') %>
+    <h1>Find Professionals Near You</h1>
+    
+    <% if (professionals && professionals.length > 0) { %>
+        <div class="pro-list">
+            <% professionals.forEach(pro => { %>
+                <div class="pro-card">
+                    <h3><%= pro.name %></h3>
+                    <p><strong>Profession:</strong> <%= pro.sector %></p>
+                    <p><strong>Location:</strong> <%= pro.location %></p>
+                    <p><strong>Experience:</strong> <%= pro.experience %> years</p>
+                    <p><strong>Bio:</strong> <%= pro.bio %></p>
+                </div>
+            <% }); %>
+        </div>
+    <% } else { %>
+        <p>No professionals found.</p>
+    <% } %>
+</body>
+</html>
