@@ -5,13 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to BuildApp</title>
 </head>
-<body>
-    <%- include('partials/header') %>
-
+<body class="home-body">
+  <%- include('partials/home_header') %>
+  <section class="home-content">
     <h1>Welcome to BuildApp</h1>
-    <p>Let's build together!</p>
-
-    <p></p>I'm a client</p>
+    <h3>The future of construction is here</h3>
+    <h3>Let's build it together</h3>
+  </section>
+  <section class="choose-role">
+    <p><button class="choose-role-button">I´m a<br>Client</button></p>
+    <p><button class="choose-role-button">I´m a<br>Professional</button></p>
+  </section>
 
     <%- include('partials/footer') %>
 </body>

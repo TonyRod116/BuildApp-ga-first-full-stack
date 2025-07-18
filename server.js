@@ -6,6 +6,12 @@ import methodOverride from 'method-override'
 import morgan from 'morgan'
 import session from 'express-session'
 import MongoStore from "connect-mongo"
+import { library, icon } from '@fortawesome/fontawesome-svg-core'
+
+
+
+
+
 
 // *Routers
 
@@ -14,6 +20,7 @@ const app = express()
 const port = process.env.PORT || 3000
 
 // *Middleware section
+app.use(express.static('public'))
 app.use(express.urlencoded({ extended: false }))
 app.use(methodOverride('_method'))
 app.use(morgan('dev'))

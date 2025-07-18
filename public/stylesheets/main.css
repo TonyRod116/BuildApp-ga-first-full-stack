@@ -1,0 +1,79 @@
+* {
+  box-sizing: border-box;
+}
+
+h3 {
+  font-size: 0.5em;
+}
+
+
+
+.home-body {
+  background-color: rgba(2, 23, 41, 0.4);
+  background-image: url('/media/BuildAppBG01.jpg');
+  background-size: cover;
+  background-blend-mode: overlay;
+}
+
+.home-content {
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+  font-size: 3em;
+  color: #ffffff;
+  font-family: 'Roboto', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2em;
+  line-height: 0.2;
+}
+
+.home-header {
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  font-size: 1em;
+  font-family: 'Roboto', sans-serif; 
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  margin-top: 0.5em;
+  margin-right: 2.5em;
+}
+
+.choose-role {
+  font-family: 'Roboto', sans-serif;
+  margin-top: 2em;
+  display: flex;
+  flex-direction: row;
+  font-size: 2em;
+  font-family: 'Roboto', sans-serif;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  gap: 2em;
+}
+
+.choose-role-button {
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+  border: 0px;
+  font-weight: bold;
+  background-color:white;
+  color: #000000;
+  width: 10em;
+  height: 5em;
+  border-radius: 0.5em;
+  font-size: 1em;
+  font-family: 'Roboto', sans-serif;
+}
+
+.footer-text {
+  font-weight: 400;
+  margin-top: 3em;
+  color: #070606;
+  font-size: 1em;
+  font-family: 'Roboto', sans-serif;
+  text-align: center;
+}
