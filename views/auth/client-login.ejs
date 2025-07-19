@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Professionls Near You</title>
+    <%- include('../partials/client_head') %>
+</head>
+<body>
+    <%- include('../partials/client_header') %>
+    <p class="center-text bigger-text down-fivepercent"> Welcome back! Please login to continue.</p>
+<form class="form" action="/auth/client/login" method="post">
+    <label for="email">Email</label>
+    <input type="email" name="email" id="email">
+    <label for="password">Password</label>
+    <input type="password" name="password" id="password">
+    <button type="submit">Login</button>
+
+</form>
+</body>
+</html>

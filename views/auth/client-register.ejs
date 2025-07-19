@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Professionls Near You</title>
+    <%- include('../partials/client_head') %>
+</head>
+<body>
+    <%- include('../partials/client_header') %>
+    <p class="center-text bigger-text down-fivepercent"> Welcome! Please register to continue.</p>
+    <% if (locals.message) { %>
+      <p class="center-text error-message"><%= message %></p>
+    <% } %>
+<form class="form" action="/auth/client/register" method="post">
+    <label for="name">Name</label>
+    <input type="text" name="name" id="name">
+    <label for="email">Email</label>
+    <input type="email" name="email" id="email">
+    <label for="password">Password</label>
+    <input type="password" name="password" id="password">
+    <label for="confirmPassword">Confirm Password</label>
+    <input type="password" name="confirmPassword" id="confirmPassword">
+    <button type="submit">Register</button>
+
+</form>
+</body>
+</html>

@@ -7,6 +7,8 @@ import morgan from 'morgan'
 import session from 'express-session'
 import MongoStore from "connect-mongo"
 import { library, icon } from '@fortawesome/fontawesome-svg-core'
+import isSignedIn from './middleware/isSignedIn.js'
+import passUserToView from './middleware/passUserToView.js'
 
 import authRouter from './controllers/auth.js'
 import { showProsList } from './controllers/client.js'

@@ -85,6 +85,7 @@ html, body {
 
 .home-content-slogan {
   font-size: 1.5em;
+  font-weight: bold;
   text-align: center;
   text-shadow: 3px 3px 3px rgba(0, 0, 0, 1);
   color: #ffffff;
@@ -97,7 +98,7 @@ html, body {
 }
 
 .home-header {
-  text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
+  text-shadow: 3px 3px 5px rgba(0, 0, 0, 1);
   color: #ffffff;
   font-size: 1em;
   font-family: 'Roboto', sans-serif; 
@@ -151,4 +152,21 @@ html, body {
   display: flex;
   flex-direction: column;
   margin-left: 2em;
+}
+
+.center-text {
+  text-align: center;
+}
+
+.bigger-text {
+  font-size: 1.5em;
+}
+
+.down-fivepercent {
+  margin-top: 5%;
+}
+
+p {
+  font-family: 'Roboto', sans-serif;
+  color: #000000;
 }
