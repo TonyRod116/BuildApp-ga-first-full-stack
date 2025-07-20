@@ -3,7 +3,11 @@
     <p class="client-header-title">BuildApp</p>
   </div>
   <div class="client-header-right">
-    <a href="/auth/client/login" class="client-header-login">Log in</a>
-    <a href="/auth/client/register" class="client-header-signup">Sign up</a>
+    <% if (locals.user) { %>
+      <a href="/auth/client/logout" class="client-header-logout">Log out</a>
+    <% } else { %>
+      <a href="/auth/client/login" class="client-header-login">Log in</a>
+      <a href="/auth/client/register" class="client-header-signup">Sign up</a>
+    <% } %>
   </div>
 </header> 

@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt'
 
 const userSchema = new mongoose.Schema({
   name: { type: String, required: false },
-  username: { type: String, required: false},
+  email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   profilePic: { type: String, required: false },
   experience: { type: Number, required: false },
@@ -16,6 +16,15 @@ const userSchema = new mongoose.Schema({
   comments: { type: [String], required: false },
   rating: { type: Number, required: false, default: 0 },
 })
+
+userSchema.pre('save', function(next){
+  if (this.isModified('password')) {
+    this.password = bcrypt.hashSync(this.password, 12)
+  }
+  next()
+})
+
+
 
 const User = mongoose.model('User', userSchema)
 

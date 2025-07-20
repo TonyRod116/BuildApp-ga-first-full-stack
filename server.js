@@ -27,7 +27,7 @@ const port = process.env.PORT || 3000
 // *Middleware section
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
-app.use(express.urlencoded({ extended: false }))
+app.use(express.urlencoded())
 app.use(methodOverride('_method'))
 app.use(morgan('dev'))
 app.use(session({
@@ -38,6 +38,7 @@ app.use(session({
     mongoUrl: process.env.MONGODB_URI
   })
 }))
+app.use(passUserToView)
 
 
 // * -------- Routes Section --------
