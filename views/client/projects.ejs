@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Projects</title>
+    <%- include('../partials/client_head') %>
+</head>
+<body>
+    <%- include('../partials/client_header') %>
+    <div class="client-profile-container down-fivepercent" style="margin-left: 2em;">
+        <h2>Your Projects</h2>
+        <a href="/client/projects/new" class="btn" style="margin-bottom: 1em; display: inline-block; background-color: teal; color: white; padding: 0.5em 1em; text-decoration: none; border-radius: 0.3em;">Create New Project</a>
+        
+        <% if (projects && projects.length > 0) { %>
+            <div class="projects-list">
+                <% projects.forEach(project => { %>
+                    <div class="project-card" style="border: 1px solid #ddd; padding: 1em; margin: 1em 0; border-radius: 0.5em; background-color: #f9f9f9;">
+                        <h3><%= project.title %></h3>
+                        <p><strong>Type:</strong> <%= project.type %></p>
+                        <p><strong>Location:</strong> <%= project.location || 'Not specified' %></p>
+                        <p><strong>Budget:</strong> €<%= project.price %></p>
+                        <p><strong>Description:</strong> <%= project.description || 'No description' %></p>
+                        
+                        <% if (project.images && project.images.length > 0) { %>
+                            <div class="project-gallery" style="display: flex; gap: 0.5em; margin-top: 1em;">
+                                <% project.images.forEach(img => { %>
+                                    <img src="<%= img %>" alt="Project Image" style="width: 100px; height: 100px; object-fit: cover; border-radius: 5px;"/>
+                                <% }) %>
+                            </div>
+                        <% } %>
+                    </div>
+                <% }) %>
+            </div>
+        <% } else { %>
+            <p>You haven't created any projects yet.</p>
+        <% } %>
+    </div>
+</body>
+</html> 

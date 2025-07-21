@@ -1,4 +1,5 @@
 .form {
+  font-family: 'Roboto', sans-serif;
   margin-top: 5%;
   display: flex;
   flex-direction: column;
@@ -8,7 +9,7 @@
   margin-right: auto;
 }
 
-.form input, .form textarea {
+.form input, .form textarea, .form select {
   background-color: rgba(0,0,0,0.05);
   border: none;
   min-height: 30px;
@@ -18,6 +19,6 @@
 .form button[type="submit"] {
   border: none;
   padding: .5rem;
-  background-color: teal;
+  background-color: rgb(1, 91, 97);
   color: #fff;
 }

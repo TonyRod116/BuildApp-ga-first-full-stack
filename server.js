@@ -7,11 +7,12 @@ import morgan from 'morgan'
 import session from 'express-session'
 import MongoStore from "connect-mongo"
 import { library, icon } from '@fortawesome/fontawesome-svg-core'
+import multer from 'multer'
 import isSignedIn from './middleware/isSignedIn.js'
 import passUserToView from './middleware/passUserToView.js'
 
 import authRouter from './controllers/auth.js'
-import { showProsList } from './controllers/client.js'
+import clientRouter from './controllers/client.js'
 
 
 
@@ -27,7 +28,8 @@ const port = process.env.PORT || 3000
 // *Middleware section
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
-app.use(express.urlencoded())
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
 app.use(methodOverride('_method'))
 app.use(morgan('dev'))
 app.use(session({
@@ -50,9 +52,9 @@ app.get('/', (req, res) => {
 
 // Router files 
 app.use('/auth', authRouter)
+app.use('/client', clientRouter)
 
 // Client routes
-app.get('/pros/list', showProsList)
 
 
 //* -------- Server Section --------

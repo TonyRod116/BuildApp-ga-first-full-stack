@@ -42,7 +42,7 @@ router.post('/client/login', async (req, res) => {
       isPro: false
     }
     req.session.save(() => {
-      return res.redirect('/pros/list')
+      return res.redirect('/client/pro-list')
     })
     
   } catch (error) {
