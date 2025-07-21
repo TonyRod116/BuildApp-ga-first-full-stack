@@ -180,3 +180,28 @@ p {
   font-family: 'Roboto', sans-serif;
   color: #000000;
 }
+
+.profile-pic-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.profile-pic-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.profile-pic-circle i {
+  font-size: 4em;
+  color: #bdbdbd;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

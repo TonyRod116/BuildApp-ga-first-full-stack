@@ -4,6 +4,8 @@
   </div>
   <div class="client-header-right">
     <% if (locals.user) { %>
+      <a href="/pros/list" class="client-header-profile">Find a Pro</a>
+      <a href="/auth/client/profile" class="client-header-profile">Profile</a>
       <a href="/auth/client/logout" class="client-header-sign-up-off">Log out</a>
     <% } else { %>
       <a href="/auth/client/login" class="client-header-login">Log in</a>

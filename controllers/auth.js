@@ -1,9 +1,10 @@
 import express from 'express'
 import User from '../models/user.js'
 import bcrypt from 'bcrypt'
-import Comment from '../models/comments.js'
+import Comment from '../models/comment.js'
 import ReviewsRating from '../models/reviewsRating.js'
 import Project from '../models/project.js'
+import { upload } from '../utils/cloudinary.js'
 
 const router = express.Router()
 
