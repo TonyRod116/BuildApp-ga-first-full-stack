@@ -10,7 +10,9 @@
     <%- include('partials/header') %>
     <div class="client-profile-container down-fivepercent" style="margin-left: 2em;">
         <h2>Projects</h2>
-        <a href="/client/projects/new" class="btn" style="margin-bottom: 1em; display: inline-block; background-color: teal; color: white; padding: 0.5em 1em; text-decoration: none; border-radius: 0.3em;">Create New Project</a>
+        <% if (user && user.isPro === false) { %>
+            <a href="/client/projects/new" class="btn" style="margin-bottom: 1em; display: inline-block; background-color: teal; color: white; padding: 0.5em 1em; text-decoration: none; border-radius: 0.3em;">Create New Project</a>
+        <% } %>
         
         <% if (projects && projects.length > 0) { %>
             <div class="projects-list">
@@ -32,10 +34,19 @@
                         <% } %>
                         
                         <div class="project-actions" style="margin-top: 1em; display: flex; gap: 0.5em;">
-                            <a href="/client/projects/<%= project._id %>/edit" class="btn" style="background-color: #007bff; color: white; padding: 0.5em 1em; text-decoration: none; border-radius: 0.3em; font-size: 0.9em;">Edit Project</a>
-                            <form action="/client/projects/<%= project._id %>/delete" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this project? This action cannot be undone.');">
-                                <button type="submit" class="btn" style="background-color: #dc3545; color: white; padding: 0.5em 1em; text-decoration: none; border-radius: 0.3em; font-size: 0.9em; border: none; cursor: pointer;">Delete Project</button>
-                            </form>
+                            <% if (user && user.isPro === false) { %>
+                                <a href="/client/projects/<%= project._id %>/edit" class="btn" style="background-color: #007bff; color: white; padding: 0.5em 1em; text-decoration: none; border-radius: 0.3em; font-size: 0.9em;">Edit Project</a>
+                                <form action="/client/projects/<%= project._id %>/delete" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this project? This action cannot be undone.');">
+                                    <button type="submit" class="btn" style="background-color: #dc3545; color: white; padding: 0.5em 1em; text-decoration: none; border-radius: 0.3em; font-size: 0.9em; border: none; cursor: pointer;">Delete Project</button>
+                                </form>
+                            <% } %>
+                            <% if (user && user.isPro) { %>
+                                <form action="/client/projects/<%= project._id %>/apply" method="POST" style="display: inline;">
+                                    <button type="submit" class="btn" style="background-color: rgb(1,97,97); color: white; padding: 0.5em 1em; border-radius: 0.3em; font-size: 0.9em; border: none; cursor: pointer;">
+                                        Apply to Project
+                                    </button>
+                                </form>
+                            <% } %>
                         </div>
                         
                         <!-- Comments Section -->

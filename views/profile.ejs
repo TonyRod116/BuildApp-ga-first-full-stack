@@ -21,29 +21,48 @@
           <a href="/client/edit-profile" style="text-decoration: none; color: blue; font-size: 0.8em;">Edit your profile</a>
         </div>
         <div class="client-profile-right">
-          <!-- <p><%= user.email %></p> -->
-          <p> has rated <%= isPro.length %> Professionals</p>
-          <p>has <%= clientProjects.length %> projects</p>
-          <p>has commented on <%= clientComments.length %> projects</p>
-          <p>has commented on <%= isPro.length %> professionals</p>
-          <a href="/client/projects"><h3>Projects</h3></a>
-          <div class="client-profile-projects" style="display: flex; flex-wrap: wrap; gap: 1em; margin-top: 1em;">
-            <% clientProjects.forEach(project => { %>
-              <div class="client-profile-project" style="border: 1px solid #ddd; border-radius: 8px; padding: 1em; background-color: #f9f9f9; min-width: 200px;">
-                <a href="/client/projects" style="text-decoration: none; color: inherit;">
-                  <% if (project.images && project.images.length > 0) { %>
-                    <img src="<%= project.images[0] %>" alt="Project Image" style="width: 100%; height: 120px; object-fit: cover; border-radius: 5px; margin-bottom: 0.5em;"/>
-                  <% } else { %>
-                    <div style="width: 100%; height: 120px; background-color: #e0e0e0; border-radius: 5px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.5em;">
-                      <i class="fa-solid fa-image" style="font-size: 2em; color: #999;"></i>
-                    </div>
-                  <% } %>
-                  <h4 style="margin: 0.5em 0; color: #333;"><%= project.title %></h4>
-                  <p style="margin: 0.2em 0; color: #666; font-size: 0.9em;"><strong>Type:</strong> <%= project.type %></p>
-                  <p style="margin: 0.2em 0; color: #666; font-size: 0.9em;"><strong>Price:</strong> €<%= project.price %></p>
-                </a>
-              </div>
-            <% }) %>
-          </div>
+          <% if (user.isPro) { %>
+            <p>Has commented on <%= clientComments.length %> projects</p>
+            <p>Has applied to <%= clientProjects.length %> projects</p>
+            <h3>Photo Gallery</h3>
+            <form action="/client/profile/upload-photo" method="POST" enctype="multipart/form-data" style="margin-bottom: 1em;">
+              <input type="file" name="photo" accept="image/*" required>
+            </form>
+            <div class="pro-gallery" style="display: flex; flex-wrap: wrap; gap: 1em; margin-top: 1em;">
+              <% if (user.images && user.images.length > 0) { %>
+                <% user.images.forEach(function(img) { %>
+                  <div style="border: 1px solid #ddd; border-radius: 8px; padding: 0.5em; background-color: #f9f9f9; max-width: 200px;">
+                    <img src="<%= img %>" alt="Pro Gallery Image" style="width: 100%; height: 150px; object-fit: cover; border-radius: 5px;"/>
+                  </div>
+                <% }) %>
+              <% } else { %>
+                <p>No photos uploaded yet.</p>
+              <% } %>
+            </div>
+          <% } else { %>
+            <p> has rated <%= isPro.length %> Professionals</p>
+            <p>has <%= clientProjects.length %> projects</p>
+            <p>has commented on <%= clientComments.length %> projects</p>
+            <p>has commented on <%= isPro.length %> professionals</p>
+            <a href="/client/projects"><h3>Projects</h3></a>
+            <div class="client-profile-projects" style="display: flex; flex-wrap: wrap; gap: 1em; margin-top: 1em;">
+              <% clientProjects.forEach(project => { %>
+                <div class="client-profile-project" style="border: 1px solid #ddd; border-radius: 8px; padding: 1em; background-color: #f9f9f9; min-width: 200px;">
+                  <a href="/client/projects" style="text-decoration: none; color: inherit;">
+                    <% if (project.images && project.images.length > 0) { %>
+                      <img src="<%= project.images[0] %>" alt="Project Image" style="width: 100%; height: 120px; object-fit: cover; border-radius: 5px; margin-bottom: 0.5em;"/>
+                    <% } else { %>
+                      <div style="width: 100%; height: 120px; background-color: #e0e0e0; border-radius: 5px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.5em;">
+                        <i class="fa-solid fa-image" style="font-size: 2em; color: #999;"></i>
+                      </div>
+                    <% } %>
+                    <h4 style="margin: 0.5em 0; color: #333;"><%= project.title %></h4>
+                    <p style="margin: 0.2em 0; color: #666; font-size: 0.9em;"><strong>Type:</strong> <%= project.type %></p>
+                    <p style="margin: 0.2em 0; color: #666; font-size: 0.9em;"><strong>Price:</strong> €<%= project.price %></p>
+                  </a>
+                </div>
+              <% }) %>
+            </div>
+          <% } %>
         </div>
     </div>

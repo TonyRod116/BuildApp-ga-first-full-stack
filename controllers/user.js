@@ -4,6 +4,7 @@ import Project from '../models/project.js'
 import Comment from '../models/comment.js'
 import multer from 'multer'
 import isClient from '../middleware/isClient.js';
+import isSignedIn from '../middleware/isSignedIn.js';
 
 const router = express.Router()
 
@@ -31,7 +32,7 @@ router.get('/pro-list', async (req, res) => {
   }
 })
 
-router.get('/profile', isClient, async (req, res) => {
+router.get('/profile', isSignedIn, async (req, res) => {
   try {
     const user = req.session.user; 
     const isPro = await User.find({ isPro: true });
