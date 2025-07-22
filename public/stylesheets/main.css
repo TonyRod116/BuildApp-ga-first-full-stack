@@ -6,9 +6,9 @@ a {
   text-decoration: none;
 }
 
-a:visited {
+/* a:visited {
   color: inherit;
-}
+} */
 
 html, body {
   margin: 0;
@@ -183,7 +183,6 @@ body {
 
 p {
   font-family: 'Roboto', sans-serif;
-  color: #000000;
 }
 
 .profile-pic-circle {

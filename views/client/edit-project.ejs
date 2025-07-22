@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Project</title>
+    <%- include('../partials/client_head') %>
+</head>
+<body>
+    <%- include('../partials/client_header') %>
+    <div class="down-fivepercent">
+        <h2 class="center-text">Edit Project</h2>
+        <form action="/client/projects/<%= project._id %>/edit" method="POST" enctype="multipart/form-data" class="form" id="projectForm">
+            <label for="title">Project Title *:</label>
+            <input type="text" name="title" id="title" value="<%= project.title %>" required>
+            
+            <label for="description">Description:</label>
+            <textarea name="description" id="description" rows="4" placeholder="Describe your project..."><%= project.description || '' %></textarea>
+            
+            <label for="location">Location:</label>
+            <input type="text" name="location" id="location" value="<%= project.location || '' %>" placeholder="e.g., Barcelona, Spain">
+            
+            <label for="type">Project Type *:</label>
+            <select name="type" id="type" required>
+                <option value="">Select a type</option>
+                <option value="renovation" <%= project.type === 'renovation' ? 'selected' : '' %>>Renovation</option>
+                <option value="construction" <%= project.type === 'construction' ? 'selected' : '' %>>Construction</option>
+                <option value="repair" <%= project.type === 'repair' ? 'selected' : '' %>>Repair</option>
+                <option value="maintenance" <%= project.type === 'maintenance' ? 'selected' : '' %>>Maintenance</option>
+                <option value="electrical" <%= project.type === 'electrical' ? 'selected' : '' %>>Electrical</option>
+                <option value="plumbing" <%= project.type === 'plumbing' ? 'selected' : '' %>>Plumbing</option>
+                <option value="painting" <%= project.type === 'painting' ? 'selected' : '' %>>Painting</option>
+                <option value="carpentry" <%= project.type === 'carpentry' ? 'selected' : '' %>>Carpentry</option>
+                <option value="landscaping" <%= project.type === 'landscaping' ? 'selected' : '' %>>Landscaping</option>
+            </select>
+            
+            <label for="price">Budget (€) *:</label>
+            <input type="number" name="price" id="price" min="0" step="0.01" value="<%= project.price %>" required placeholder="0.00">
+            
+            <label for="images">Project Images:</label>
+            <input type="file" name="images" id="images" multiple accept="image/*">
+            <small>You can select multiple images (max 5). Leave empty to keep current images.</small>
+            
+            <% if (project.images && project.images.length > 0) { %>
+                <div class="current-images" style="margin: 1em 0;">
+                    <label>Current Images:</label>
+                    <div style="display: flex; gap: 0.5em; margin-top: 0.5em; flex-wrap: wrap;">
+                        <% project.images.forEach((img, index) => { %>
+                            <div style="position: relative; display: inline-block;">
+                                <img src="<%= img %>" alt="Current Project Image" style="width: 80px; height: 80px; object-fit: cover; border-radius: 5px;"/>
+                                <form action="/client/projects/<%= project._id %>/images/<%= index %>/delete" method="POST" style="position: absolute; top: -5px; right: -5px;">
+                                    <button type="submit" style="background-color: #dc3545; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center;" onclick="return confirm('Delete this image?')">×</button>
+                                </form>
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
+            <% } %>
+            
+            <button type="submit" id="submitBtn" style="background-color: rgb(1, 91, 97); color: white; padding: 0.5rem; border: none; border-radius: 0.3em; font-size: 1em; cursor: pointer; margin-top: 1em;">Update Project</button>
+        </form>
+        
+        <script>
+            document.getElementById('projectForm').addEventListener('submit', function(e) {
+                const submitBtn = document.getElementById('submitBtn');
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Updating Project...';
+            });
+        </script>
+    </div>
+</body>
+</html> 

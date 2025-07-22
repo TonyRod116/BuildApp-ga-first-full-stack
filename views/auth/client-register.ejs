@@ -9,11 +9,12 @@
 <body>
     <%- include('../partials/client_header') %>
     <p class="center-text bigger-text down-fivepercent"> Welcome! Please register to continue.</p>
+    <P class="center-text ">Already a member? <a style="text-decoration: underline;" href="/auth/client/login">Login</a> to continue.</P>
     <% if (locals.message) { %>
       <p class="center-text error-message"><%= message %></p>
     <% } %>
 <form class="form" action="/auth/client/register" method="post">
-    <label for="name">Name</label>
+    <label for="name">Name <span style="font-size: 0.7em; color: #666;">(optional)</span></label>
     <input type="text" name="name" id="name">
     <label for="email">Email</label>
     <input type="email" name="email" id="email">
