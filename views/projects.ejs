@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Projects</title>
-    <%- include('head') %>
+    <%- include('partials/head') %>
 </head>
 <body>
-    <%- include('header') %>
+    <%- include('partials/header') %>
     <div class="client-profile-container down-fivepercent" style="margin-left: 2em;">
         <h2>Projects</h2>
         <a href="/client/projects/new" class="btn" style="margin-bottom: 1em; display: inline-block; background-color: teal; color: white; padding: 0.5em 1em; text-decoration: none; border-radius: 0.3em;">Create New Project</a>
@@ -49,7 +49,7 @@
                                     <button type="submit" style="background-color: #28a745; color: white; padding: 0.5em 1em; border: none; border-radius: 0.3em; cursor: pointer; margin-top: 0.5em;">Add Comment</button>
                                 </form>
                             <% } else { %>
-                                <p style="color: #666; font-style: italic;">Please <a href="/auth/client/login">login</a> to add comments.</p>
+                                <p style="color: #666; font-style: italic;">Please <a href="/auth/login">login</a> to add comments.</p>
                             <% } %>
                             
                             <!-- Display Comments -->

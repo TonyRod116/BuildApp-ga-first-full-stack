@@ -6,7 +6,6 @@ import bcrypt from 'bcrypt'
 const professionals = [
   {
     name: "John Smith",
-    username: "john_carpenter",
     password: "password123",
     profilePic: "/media/default-avatar.png",
     experience: 8,
@@ -19,7 +18,6 @@ const professionals = [
   },
   {
     name: "Sarah Johnson",
-    username: "sarah_electrician",
     password: "password123",
     profilePic: "/media/default-avatar.png",
     experience: 12,
@@ -32,7 +30,6 @@ const professionals = [
   },
   {
     name: "Michael Brown",
-    username: "michael_builder",
     password: "password123",
     profilePic: "/media/default-avatar.png",
     experience: 15,
@@ -45,7 +42,6 @@ const professionals = [
   },
   {
     name: "Emily Davis",
-    username: "emily_painter",
     password: "password123",
     profilePic: "/media/default-avatar.png",
     experience: 6,
@@ -58,7 +54,6 @@ const professionals = [
   },
   {
     name: "David Wilson",
-    username: "david_plumber",
     password: "password123",
     profilePic: "/media/default-avatar.png",
     experience: 10,
@@ -71,7 +66,6 @@ const professionals = [
   },
   {
     name: "Lisa Anderson",
-    username: "lisa_gardener",
     password: "password123",
     profilePic: "/media/default-avatar.png",
     experience: 7,
@@ -84,7 +78,6 @@ const professionals = [
   },
   {
     name: "Robert Taylor",
-    username: "robert_locksmith",
     password: "password123",
     profilePic: "/media/default-avatar.png",
     experience: 9,
@@ -97,7 +90,6 @@ const professionals = [
   },
   {
     name: "Jennifer White",
-    username: "jennifer_cleaner",
     password: "password123",
     profilePic: "/media/default-avatar.png",
     experience: 5,
@@ -110,7 +102,6 @@ const professionals = [
   },
   {
     name: "Thomas Garcia",
-    username: "thomas_roofer",
     password: "password123",
     profilePic: "/media/default-avatar.png",
     experience: 11,
@@ -123,7 +114,6 @@ const professionals = [
   },
   {
     name: "Amanda Rodriguez",
-    username: "amanda_decorator",
     password: "password123",
     profilePic: "/media/default-avatar.png",
     experience: 8,

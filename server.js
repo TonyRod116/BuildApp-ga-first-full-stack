@@ -12,7 +12,7 @@ import isSignedIn from './middleware/isSignedIn.js'
 import passUserToView from './middleware/passUserToView.js'
 
 import authRouter from './controllers/auth.js'
-import clientRouter from './controllers/client.js'
+import userRouter from './controllers/user.js'
 
 
 
@@ -52,7 +52,7 @@ app.get('/', (req, res) => {
 
 // Router files 
 app.use('/auth', authRouter)
-app.use('/client', clientRouter)
+app.use('/client', userRouter)
 
 // Client routes
 

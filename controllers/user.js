@@ -37,7 +37,7 @@ router.get('/profile', isClient, async (req, res) => {
     const isPro = await User.find({ isPro: true });
     const clientProjects = await Project.find({ createdBy: user.id });
     const clientComments = await Comment.find({ user: user.id });
-
+    
     return res.render('profile', {
       user,
       clientProjects,

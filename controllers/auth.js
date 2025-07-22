@@ -8,38 +8,41 @@ import { upload } from '../utils/cloudinary.js'
 
 const router = express.Router()
 
-router.get('/client', (req, res) => {
-  res.render('auth/client-login.ejs')
+router.get('/login', (req, res) => {
+  res.render('auth/login.ejs')
 })
 
-router.get('/client/login', (req, res) => {
-  res.render('auth/client-login.ejs')
-})
-
+// *Client
 router.get('/client/register', (req, res) => {
-  res.render('auth/client-register.ejs')
+  res.render('auth/register.ejs', { isPro: false })
+})
+
+// *Pro
+router.get('/pro/register', (req, res) => {
+  res.render('auth/register.ejs', { isPro: true })
 })
 
 // * Client Login
-router.post('/client/login', async (req, res) => {
+router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body
 
     const existingUser = await User.findOne({ email })
     if (!existingUser) {
-      return res.render('auth/client-login.ejs', { message: 'User not found.' })
+      return res.render('auth/login.ejs', { message: 'User not found.' })
     }
 
     const isPasswordValid = bcrypt.compareSync(password, existingUser.password)
     if (!isPasswordValid) {
-      return res.render('auth/client-login.ejs', { message: 'Incorrect password.' })
+      return res.render('auth/login.ejs', { message: 'Incorrect password.' })
     }
 
     req.session.user = {
       id: existingUser._id,
       email: existingUser.email,
       name: existingUser.name,
-      isPro: false
+      isPro: existingUser.isPro, 
+      profilePic: existingUser.profilePic || null
     }
     req.session.save(() => {
       return res.redirect('/client/pro-list')
@@ -47,7 +50,7 @@ router.post('/client/login', async (req, res) => {
     
   } catch (error) {
     console.error('Login error:', error)
-    return res.render('auth/client-login.ejs', { message: 'An error occurred. Please try again.' })
+    return res.render('auth/login.ejs', { message: 'An error occurred. Please try again.' })
   }
 })
 
@@ -60,30 +63,34 @@ router.post('/client/register', async (req, res) => {
     
     const existingUser = await User.findOne({ email })
     if (existingUser) {
-      return res.render('auth/client-register.ejs', { 
-        message: 'Email already in use.' 
+      return res.render('auth/register.ejs', { 
+        message: 'Email already in use.',
+        isPro: false
       })
     }
     
     if (email.trim() === '') {
-      return res.render('auth/client-register.ejs', { 
-        message: 'Please provide an email.' 
+      return res.render('auth/register.ejs', { 
+        message: 'Please provide an email.',
+        isPro: false
       })
     }
     
     if (password.trim() === '') {
-      return res.render('auth/client-register.ejs', { 
-        message: 'Please provide a password.' 
+      return res.render('auth/register.ejs', { 
+        message: 'Please provide a password.',
+        isPro: false
       })
     }
     
     if (password !== confirmPassword) {
-      return res.render('auth/client-register.ejs', { 
-        message: 'Passwords do not match.' 
+      return res.render('auth/register.ejs', { 
+        message: 'Passwords do not match.',
+        isPro: false
       })
     }
     
-    // if client registers from client/.. isPro = false
+    // Client registration - isPro = false
     const user = new User({
       name,
       email,
@@ -100,19 +107,83 @@ router.post('/client/register', async (req, res) => {
       isPro: false
     }
     
-    return res.redirect('/pros/list')
+    return res.redirect('/client/pro-list')
     
   } catch (error) {
     console.error('Registration error:', error)
     console.error('Error details:', error.message)
-    return res.render('auth/client-register.ejs', { 
-      message: `An error occurred, please try again.` 
+    return res.render('auth/register.ejs', { 
+      message: `An error occurred, please try again.`,
+      isPro: false
+    })
+  }
+})
+
+// * Professional Register
+router.post('/pro/register', async (req, res) => {
+  try {
+    const { name, email, password, confirmPassword} = req.body
+    
+    const existingUser = await User.findOne({ email })
+    if (existingUser) {
+      return res.render('auth/register.ejs', { 
+        message: 'Email already in use.',
+        isPro: true
+      })
+    }
+    
+    if (email.trim() === '') {
+      return res.render('auth/register.ejs', { 
+        message: 'Please provide an email.',
+        isPro: true
+      })
+    }
+    
+    if (password.trim() === '') {
+      return res.render('auth/register.ejs', { 
+        message: 'Please provide a password.',
+        isPro: true
+      })
+    }
+    
+    if (password !== confirmPassword) {
+      return res.render('auth/register.ejs', { 
+        message: 'Passwords do not match.',
+        isPro: true
+      })
+    }
+    
+    // Professional registration - isPro = true
+    const user = new User({
+      name,
+      email,
+      password,
+      isPro: true
+    })
+    
+    await user.save()
+    
+    req.session.user = {
+      id: user._id,
+      email: user.email,
+      name: user.name,
+      isPro: true
+    }
+    
+    return res.redirect('/client/pro-list')
+    
+  } catch (error) {
+    console.error('Registration error:', error)
+    console.error('Error details:', error.message)
+    return res.render('auth/register.ejs', { 
+      message: `An error occurred, please try again.`,
+      isPro: true
     })
   }
 })
 
 // * Client Logout
-router.get('/client/logout', (req, res) => {
+router.get('/logout', (req, res) => {
   req.session.destroy(() => {
     res.redirect('/')
   })

@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login and start building your dreams</title>
-    <%- include('../head') %>
+    <%- include('../partials/head') %>
 </head>
 <body>
-    <%- include('../header') %>
+    <%- include('../partials/header') %>
     <p class="center-text bigger-text down-fivepercent"> Welcome! Login to continue.</p>
     <% if (locals.message) { %>
       <p class="center-text error-message"><%= message %></p>
     <% } %>
-<form class="form" action="/auth/client/login" method="post">
+<form class="form" action="/auth/login" method="post">
     <label for="email">Email</label>
     <input type="email" name="email" id="email">
     <label for="password">Password</label>
