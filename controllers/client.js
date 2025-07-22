@@ -21,10 +21,10 @@ const upload = multer({ storage: storage });
 router.get('/pro-list', async (req, res) => {
   try {
     const professionals = await User.find({ isPro: true })   
-    return res.render('client/proslist', { professionals })
+    return res.render('proslist', { professionals })
   } catch (error) {
     console.error('Error fetching professionals:', error)
-    res.status(500).render('client/proslist', { 
+    res.status(500).render('proslist', { 
       professionals: [],
       error: 'Error loading professionals'
     })
@@ -37,7 +37,7 @@ router.get('/profile', isClient, async (req, res) => {
     const isPro = await User.find({ isPro: true });
     const clientProjects = await Project.find({ createdBy: user.id });
     const clientComments = await Comment.find({ user: user.id });
-    return res.render('client/client-profile', {
+    return res.render('profile', {
       user,
       clientProjects,
       clientComments,
@@ -45,27 +45,27 @@ router.get('/profile', isClient, async (req, res) => {
     });
   } catch (error) {
     console.error('Error fetching user:', error);
-    res.status(500).render('client/client-profile', { 
+    res.status(500).render('profile', { 
       user: null,
       error: 'Error loading user'
     });
   }
 });
 
-router.get('/edit-client-profile', isClient, async (req, res) => {
+router.get('/edit-profile', isClient, async (req, res) => {
   try {
     const user = req.session.user;
-    return res.render('client/edit-client-profile', { user });
+    return res.render('edit-profile', { user });
   } catch (error) {
     console.error('Error fetching user:', error);
-    res.status(500).render('client/edit-client-profile', { 
+    res.status(500).render('edit-profile', { 
       user: null,
       error: 'Error loading user'
     });
   }
 });
 
-router.post('/edit-client-profile', isClient, upload.single('profilePic'), async (req, res) => {
+router.post('/edit-profile', isClient, upload.single('profilePic'), async (req, res) => {
   try {
     const user = req.session.user;
     const { name, email } = req.body;
@@ -80,7 +80,7 @@ router.post('/edit-client-profile', isClient, upload.single('profilePic'), async
     res.redirect('/client/profile');
   } catch (error) {
     console.error('Error updating profile:', error);
-    res.status(500).render('client/edit-client-profile', { user: req.session.user, error: 'Error updating profile' });
+    res.status(500).render('edit-profile', { user: req.session.user, error: 'Error updating profile' });
   }
 });
 
@@ -88,23 +88,101 @@ router.get('/projects', isClient, async (req, res) => {
   try {
     const user = req.session.user;
     const projects = await Project.find({ createdBy: user.id });
-    res.render('client/projects', { user, projects });
+    
+    // Load comments
+    const projectsWithComments = await Promise.all(projects.map(async (project) => {
+      const comments = await Comment.find({ project: project._id }).populate('user', 'name');
+      const commentsWithUserData = comments.map(comment => ({
+        comment: comment.comment,
+        userName: comment.user.name,
+        createdAt: comment.createdAt
+      }));
+      
+      return {
+        ...project.toObject(),
+        comments: commentsWithUserData
+      };
+    }));
+    
+    res.render('projects', { user, projects: projectsWithComments });
   } catch (error) {
     console.error('Error fetching projects:', error);
-    res.status(500).render('client/projects', { 
+    res.status(500).render('projects', { 
       user: null,
       error: 'Error loading projects'
     });
   }
 });
 
+// Ruta pública para ver todos los proyectos con comentarios
+router.get('/projects/public', async (req, res) => {
+  try {
+    const projects = await Project.find().populate('createdBy', 'name');
+    
+    // Load comments
+    const projectsWithComments = await Promise.all(projects.map(async (project) => {
+      const comments = await Comment.find({ project: project._id }).populate('user', 'name');
+      const commentsWithUserData = comments.map(comment => ({
+        comment: comment.comment,
+        userName: comment.user.name,
+        createdAt: comment.createdAt
+      }));
+      
+      return {
+        ...project.toObject(),
+        comments: commentsWithUserData
+      };
+    }));
+    
+    res.render('projects', { 
+      user: req.session.user || null, 
+      projects: projectsWithComments
+    });
+  } catch (error) {
+    console.error('Error fetching public projects:', error);
+    res.status(500).render('error', { message: 'Error loading projects' });
+  }
+});
+
+// Comments
+router.post('/projects/:id/comment', async (req, res) => {
+  try {
+    const user = req.session.user;
+    if (!user) {
+      return res.status(401).render('error', { message: 'You must be logged in to comment' });
+    }
+    
+    const { comment } = req.body;
+    const projectId = req.params.id;
+    
+    // project exists?
+    const project = await Project.findById(projectId);
+    if (!project) {
+      return res.status(404).render('error', { message: 'Project not found' });
+    }
+    
+    // Create comment
+    const newComment = new Comment({
+      comment,
+      user: user.id,
+      project: projectId
+    });
+    
+    await newComment.save();
+    res.redirect('/client/projects/public');
+  } catch (error) {
+    console.error('Error adding comment:', error);
+    res.status(500).render('error', { message: 'Error adding comment' });
+  }
+});
+
 router.get('/projects/new', isClient, async (req, res) => {
   try {
     const user = req.session.user;
-    res.render('client/new-project', { user });
+    res.render('new-project', { user });
   } catch (error) {
     console.error('Error fetching user:', error);
-    res.status(500).render('client/new-project', { 
+    res.status(500).render('new-project', { 
       user: null,
       error: 'Error loading user'
     });
@@ -120,7 +198,7 @@ router.post('/projects', isClient, upload.array('images', 5), async (req, res) =
       createdBy: user.id 
     });
     if (existingProject) {
-      return res.status(400).render('client/new-project', { 
+      return res.status(400).render('new-project', { 
         user: req.session.user,
         error: 'A project with this title already exists'
       });
@@ -139,7 +217,7 @@ router.post('/projects', isClient, upload.array('images', 5), async (req, res) =
     res.redirect('/client/projects');
   } catch (error) {
     console.error('Error creating project:', error);
-    res.status(500).render('client/new-project', { 
+    res.status(500).render('new-project', { 
       user: req.session.user,
       error: 'Error creating project'
     });
@@ -153,7 +231,7 @@ router.get('/projects/:id/edit', isClient, async (req, res) => {
     if (!project) {
       return res.status(404).render('error', { message: 'Project not found or you are not authorized to edit this project' });
     }
-    res.render('client/edit-project', { user, project });
+    res.render('edit-project', { user, project });
   } catch (error) {
     console.error('Error fetching project for edit:', error);
     res.status(500).render('error', { message: 'Error loading project' });

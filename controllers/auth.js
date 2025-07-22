@@ -114,7 +114,7 @@ router.post('/client/register', async (req, res) => {
 // * Client Logout
 router.get('/client/logout', (req, res) => {
   req.session.destroy(() => {
-    res.redirect('/pros/list')
+    res.redirect('/')
   })
 })
 

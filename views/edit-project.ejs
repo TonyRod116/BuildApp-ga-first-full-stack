@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Project</title>
-    <%- include('../partials/client_head') %>
+    <%- include('head') %>
 </head>
 <body>
-    <%- include('../partials/client_header') %>
+    <%- include('header') %>
     <div class="down-fivepercent">
         <h2 class="center-text">Edit Project</h2>
         <form action="/client/projects/<%= project._id %>/edit" method="POST" enctype="multipart/form-data" class="form" id="projectForm">
@@ -49,7 +49,7 @@
                             <div style="position: relative; display: inline-block;">
                                 <img src="<%= img %>" alt="Current Project Image" style="width: 80px; height: 80px; object-fit: cover; border-radius: 5px;"/>
                                 <form action="/client/projects/<%= project._id %>/images/<%= index %>/delete" method="POST" style="position: absolute; top: -5px; right: -5px;">
-                                    <button type="submit" style="background-color: #dc3545; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center;" onclick="return confirm('Delete this image?')">×</button>
+                                    <button type="submit" style="background-color: rgb(1, 91, 97); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center;" onclick="return confirm('Delete this image?')">×</button>
                                 </form>
                             </div>
                         <% }) %>
@@ -57,16 +57,12 @@
                 </div>
             <% } %>
             
-            <button type="submit" id="submitBtn" style="background-color: rgb(1, 91, 97); color: white; padding: 0.5rem; border: none; border-radius: 0.3em; font-size: 1em; cursor: pointer; margin-top: 1em;">Update Project</button>
+            <button type="submit" class="form" style="background-color: rgb(1, 91, 97); color: white; padding: 0.5rem; border: none; border-radius: 0.3em; font-size: 1em; cursor: pointer; margin-top: 1em;">Update Project</button>
         </form>
         
-        <script>
-            document.getElementById('projectForm').addEventListener('submit', function(e) {
-                const submitBtn = document.getElementById('submitBtn');
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'Updating Project...';
-            });
-        </script>
+        <div style="margin-top: 1em; text-align: center;">
+            <a href="/client/projects" class="form" style="background-color: #6c757d; color: white; padding: 0.5rem; border: none; border-radius: 0.3em; font-size: 1em; cursor: pointer; margin-top: 1em; text-decoration: none;"><span style="margin: 0 auto"></span>Cancel</span></a>
+        </div>
     </div>
 </body>
 </html> 

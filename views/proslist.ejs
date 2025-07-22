@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Find Professionls Near You</title>
-    <%- include('../partials/client_head') %>
+    <%- include('head') %>
 </head>
 <body>
-    <%- include('../partials/client_header') %>
-    <h1>Find Professionals Near You</h1>
+    <%- include('header') %>
+    <h1 style="text-align: center; margin-top: 2em;">Find Professionals Near You</h1>
     
     <% if (professionals && professionals.length > 0) { %>
         <div class="pro-list">

@@ -1,0 +1,26 @@
+<header class="header">
+  <div class="header-left">
+    <p class="client-header-title" style="margin-left: 1em;">BuildApp</p>
+  </div>
+  <div class="header-right">
+    <% if (user && user.isPro) { %>
+      <!-- Professionals -->
+      <a href="/pro/dashboard" class="client-header-profile">Pro Dashboard</a>
+      <a href="/client/projects/public" class="client-header-profile">All Projects</a>
+      <a href="/pro/profile" class="client-header-profile">My Pro Profile</a>
+      <a href="/client/logout" class="client-header-sign-up-off">Log out</a>
+    <% } else if (user && user.isPro === false) { %>
+      <!-- Clients -->
+      <a href="/client/pro-list" class="client-header-profile">Find a Pro</a>
+      <a href="/client/projects/new" class="client-header-profile">Create Project</a>
+      <a href="/client/projects/public" class="client-header-profile">All Projects</a>
+      <a href="/client/profile" class="client-header-profile">Profile</a>
+      <a href="/client/logout" class="client-header-sign-up-off">Log out</a>
+    <% } else { %>
+      <!-- Unlogged -->
+      <a href="/client/projects/public" class="client-header-profile">All Projects</a>
+      <a href="/auth/client/login" class="client-header-login">Log in</a>
+      <a href="/auth/client/register" class="client-header-sign-up-off">Sign up</a>
+    <% } %>
+  </div>
+</header> 
