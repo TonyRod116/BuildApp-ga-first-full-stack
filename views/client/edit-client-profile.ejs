@@ -8,8 +8,8 @@
 </head>
 <body>
     <%- include('../partials/client_header') %>
-    <div class="client-profile-container down-fivepercent" style="justify-content: left; margin-left: 2em;">
-      <div class="client-profile-container">
+    <div class="client-profile-container down-fivepercent">
+      <div class="client-profile-container" style="margin: 0 auto; display: flex; flex-direction: column; align-items: center;">
         <div class="profile-pic-circle">
           <% if (user.profilePic) { %>
             <img src="<%= user.profilePic %>" alt="Profile Image" />
@@ -17,10 +17,10 @@
             <i class="fa-solid fa-user"></i>
           <% } %>
         </div>
-        <h2 style="text-align: left; margin-top: 1em;">Edit <%= user.name %>'s profile</h2>
+        <h2 style="margin-top: 1em; text-align: center;">Edit <%= user.name %>'s profile</h2>
       </div>
       <div class="client-profile-right">
-        <form action="/client/edit-client-profile" method="POST" enctype="multipart/form-data" class="edit-profile-form">
+        <form action="/client/edit-client-profile" method="POST" enctype="multipart/form-data" class="form">
           <label for="profilePic">Change profile picture:</label>
           <input type="file" name="profilePic" id="profilePic" accept="image/*">
 

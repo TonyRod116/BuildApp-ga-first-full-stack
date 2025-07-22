@@ -3,6 +3,7 @@ import express from 'express'
 import Project from '../models/project.js'
 import Comment from '../models/comment.js'
 import multer from 'multer'
+import isClient from '../middleware/isClient.js';
 
 const router = express.Router()
 
@@ -17,7 +18,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-
 router.get('/pro-list', async (req, res) => {
   try {
     const professionals = await User.find({ isPro: true })   
@@ -31,13 +31,9 @@ router.get('/pro-list', async (req, res) => {
   }
 })
 
-
-router.get('/profile', async (req, res) => {
+router.get('/profile', isClient, async (req, res) => {
   try {
     const user = req.session.user; 
-    if (!user) {
-      return res.redirect('/auth/client/login');
-    }
     const isPro = await User.find({ isPro: true });
     const clientProjects = await Project.find({ createdBy: user.id });
     const clientComments = await Comment.find({ user: user.id });
@@ -56,12 +52,9 @@ router.get('/profile', async (req, res) => {
   }
 });
 
-router.get('/edit-client-profile', async (req, res) => {
+router.get('/edit-client-profile', isClient, async (req, res) => {
   try {
     const user = req.session.user;
-    if (!user) {
-      return res.redirect('/auth/client/login');
-    }
     return res.render('client/edit-client-profile', { user });
   } catch (error) {
     console.error('Error fetching user:', error);
@@ -72,37 +65,42 @@ router.get('/edit-client-profile', async (req, res) => {
   }
 });
 
-router.get('/projects', async (req, res) => {
-  try {
-  const user = req.session.user;
-  if (!user) return res.redirect('/auth/client/login');
-  
-  // Check if user is not a professional
-  if (user.isPro) {
-    return res.status(403).render('error', { message: 'Only clients can view projects' });
-  }
-  
-  const projects = await Project.find({ createdBy: user.id });
-  res.render('client/projects', { user, projects });
-} catch (error) {
-  console.error('Error fetching projects:', error);
-  res.status(500).render('client/projects', { 
-    user: null,
-    error: 'Error loading projects'
-  });
-}
-});
-
-router.get('/projects/new', async (req, res) => {
+router.post('/edit-client-profile', isClient, upload.single('profilePic'), async (req, res) => {
   try {
     const user = req.session.user;
-    if (!user) return res.redirect('/auth/client/login');
-    
-    // Check if user is not a professional
-    if (user.isPro) {
-      return res.status(403).render('error', { message: 'Only clients can create projects' });
+    const { name, email } = req.body;
+    const updateData = { name, email };
+    if (req.file) {
+      updateData.profilePic = '/uploads/' + req.file.filename;
     }
-    
+    await User.findByIdAndUpdate(user.id, updateData);
+    req.session.user.name = name;
+    req.session.user.email = email;
+    if (req.file) req.session.user.profilePic = updateData.profilePic;
+    res.redirect('/client/profile');
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    res.status(500).render('client/edit-client-profile', { user: req.session.user, error: 'Error updating profile' });
+  }
+});
+
+router.get('/projects', isClient, async (req, res) => {
+  try {
+    const user = req.session.user;
+    const projects = await Project.find({ createdBy: user.id });
+    res.render('client/projects', { user, projects });
+  } catch (error) {
+    console.error('Error fetching projects:', error);
+    res.status(500).render('client/projects', { 
+      user: null,
+      error: 'Error loading projects'
+    });
+  }
+});
+
+router.get('/projects/new', isClient, async (req, res) => {
+  try {
+    const user = req.session.user;
     res.render('client/new-project', { user });
   } catch (error) {
     console.error('Error fetching user:', error);
@@ -113,41 +111,21 @@ router.get('/projects/new', async (req, res) => {
   }
 });
 
-router.post('/projects', upload.array('images', 5), async (req, res) => {
+router.post('/projects', isClient, upload.array('images', 5), async (req, res) => {
   try {
-    console.log('req.body:', req.body);
-    console.log('req.files:', req.files);
-    
     const user = req.session.user;
-    if (!user) return res.redirect('/auth/client/login');
-    
-    // Check if user is not a professional
-    if (user.isPro) {
-      return res.status(403).render('client/new-project', { 
-        user: req.session.user,
-        error: 'Only clients can create projects'
-      });
-    }
-    
     const { title, description, location, type, price } = req.body;
-    console.log('Object Data:', { title, description, location, type, price });
-    
-    // verufy there's no two same projects
     const existingProject = await Project.findOne({ 
       title: title, 
       createdBy: user.id 
     });
-    
     if (existingProject) {
       return res.status(400).render('client/new-project', { 
         user: req.session.user,
         error: 'A project with this title already exists'
       });
     }
-    
-    // process images if uploaded
     const images = req.files ? req.files.map(file => '/uploads/' + file.filename) : [];
-    
     const project = new Project({ 
       title, 
       description, 
@@ -168,22 +146,13 @@ router.post('/projects', upload.array('images', 5), async (req, res) => {
   }
 });
 
-// Route to show edit project form
-router.get('/projects/:id/edit', async (req, res) => {
+router.get('/projects/:id/edit', isClient, async (req, res) => {
   try {
     const user = req.session.user;
-    if (!user) return res.redirect('/auth/client/login');
-    
-    // Check if user is not a professional
-    if (user.isPro) {
-      return res.status(403).render('error', { message: 'Only clients can edit projects' });
-    }
-    
     const project = await Project.findOne({ _id: req.params.id, createdBy: user.id });
     if (!project) {
       return res.status(404).render('error', { message: 'Project not found or you are not authorized to edit this project' });
     }
-    
     res.render('client/edit-project', { user, project });
   } catch (error) {
     console.error('Error fetching project for edit:', error);
@@ -191,37 +160,23 @@ router.get('/projects/:id/edit', async (req, res) => {
   }
 });
 
-// Route to handle project update
-router.post('/projects/:id/edit', upload.array('images', 5), async (req, res) => {
+router.post('/projects/:id/edit', isClient, upload.array('images', 5), async (req, res) => {
   try {
     const user = req.session.user;
-    if (!user) return res.redirect('/auth/client/login');
-    
-    // Check if user is not a professional
-    if (user.isPro) {
-      return res.status(403).render('error', { message: 'Only clients can edit projects' });
-    }
-    
     const { title, description, location, type, price } = req.body;
-    
     const project = await Project.findOne({ _id: req.params.id, createdBy: user.id });
     if (!project) {
       return res.status(404).render('error', { message: 'Project not found or you are not authorized to edit this project' });
     }
-    
-    // Update project fields
     project.title = title;
     project.description = description;
     project.location = location;
     project.type = type;
     project.price = parseFloat(price) || 0;
-    
-    // Handle new images if uploaded
     if (req.files && req.files.length > 0) {
       const newImages = req.files.map(file => '/uploads/' + file.filename);
       project.images = newImages;
     }
-    
     await project.save();
     res.redirect('/client/projects');
   } catch (error) {
@@ -230,22 +185,13 @@ router.post('/projects/:id/edit', upload.array('images', 5), async (req, res) =>
   }
 });
 
-// Route to handle project deletion
-router.post('/projects/:id/delete', async (req, res) => {
+router.post('/projects/:id/delete', isClient, async (req, res) => {
   try {
     const user = req.session.user;
-    if (!user) return res.redirect('/auth/client/login');
-    
-    // Check if user is not a professional
-    if (user.isPro) {
-      return res.status(403).render('error', { message: 'Only clients can delete projects' });
-    }
-    
     const project = await Project.findOne({ _id: req.params.id, createdBy: user.id });
     if (!project) {
       return res.status(404).render('error', { message: 'Project not found or you are not authorized to delete this project' });
     }
-    
     await Project.findByIdAndDelete(req.params.id);
     res.redirect('/client/projects');
   } catch (error) {
@@ -254,31 +200,19 @@ router.post('/projects/:id/delete', async (req, res) => {
   }
 });
 
-// Route to handle individual image deletion
-router.post('/projects/:id/images/:imageIndex/delete', async (req, res) => {
+router.post('/projects/:id/images/:imageIndex/delete', isClient, async (req, res) => {
   try {
     const user = req.session.user;
-    if (!user) return res.redirect('/auth/client/login');
-    
-    // Check if user is not a professional
-    if (user.isPro) {
-      return res.status(403).render('error', { message: 'Only clients can delete project images' });
-    }
-    
     const project = await Project.findOne({ _id: req.params.id, createdBy: user.id });
     if (!project) {
       return res.status(404).render('error', { message: 'Project not found or you are not authorized to modify this project' });
     }
-    
     const imageIndex = parseInt(req.params.imageIndex);
     if (imageIndex < 0 || imageIndex >= project.images.length) {
       return res.status(400).render('error', { message: 'Invalid image index' });
     }
-    
-    // Remove the image at the specified index
     project.images.splice(imageIndex, 1);
     await project.save();
-    
     res.redirect(`/client/projects/${req.params.id}/edit`);
   } catch (error) {
     console.error('Error deleting image:', error);
