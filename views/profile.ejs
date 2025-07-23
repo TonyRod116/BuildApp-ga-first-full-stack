@@ -48,9 +48,6 @@
                   <p style="margin: 0.3em 0; color: #666;"><strong>Profession:</strong> <%= user.sector || 'Not specified' %></p>
                   <p style="margin: 0.3em 0; color: #666;"><strong>Location:</strong> <%= user.location || 'Not specified' %></p>
                   <p style="margin: 0.3em 0; color: #666;"><strong>Experience:</strong> <%= user.experience || 0 %> years</p>
-                  <% if (user.bio) { %>
-                    <p style="margin: 0.3em 0; color: #666;"><strong>Bio:</strong> <%= user.bio %></p>
-                  <% } %>
                 </div>
                 
                 <div style="padding: 1em; background-color: #f8f9fa; border-radius: 8px; min-width: 200px;">
@@ -68,6 +65,14 @@
                 </div>
               </div>
             </div>
+
+            <!-- Bio Section -->
+            <% if (user.bio) { %>
+              <div class="bio-section" style="margin-bottom: 2em; padding: 1.5em; background-color: #fff; border-radius: 12px; border: 1px solid #e9ecef; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <h3 style="margin: 0 0 1em 0; color: #333; font-size: 1.3em;">About Me</h3>
+                <p style="margin: 0; color: #666; line-height: 1.6; font-size: 1em;"><%= user.bio %></p>
+              </div>
+            <% } %>
 
             <!-- Recent Ratings Section -->
             <% if (ratings && ratings.recent && ratings.recent.length > 0) { %>
