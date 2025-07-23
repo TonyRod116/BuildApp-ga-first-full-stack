@@ -47,7 +47,7 @@ app.use(passUserToView)
 
 // Home route
 app.get('/', (req, res) => {
-  res.render('index.ejs')
+  res.render('home.ejs')
 })
 
 // Home select 
