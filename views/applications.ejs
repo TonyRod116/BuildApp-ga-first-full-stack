@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Applications</title>
+    <%- include('partials/head') %>
+</head>
+<body>
+    <%- include('partials/header') %>
+    
+    <div class="container" style="margin: 2em auto; max-width: 1200px; padding: 0 1em;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2em;">
+            <h1 style="color: #333; margin: 0;">Project Applications Overview</h1>
+            <div style="display: flex; gap: 1em;">
+                <div style="text-align: center; padding: 1em; background-color: #f8f9fa; border-radius: 8px; min-width: 120px;">
+                    <h3 style="margin: 0; color: #007bff;"><%= totalProjects %></h3>
+                    <p style="margin: 0.2em 0 0 0; font-size: 0.9em; color: #666;">Total Projects</p>
+                </div>
+                <div style="text-align: center; padding: 1em; background-color: #f8f9fa; border-radius: 8px; min-width: 120px;">
+                    <h3 style="margin: 0; color: #28a745;"><%= totalApplications %></h3>
+                    <p style="margin: 0.2em 0 0 0; font-size: 0.9em; color: #666;">Total Applications</p>
+                </div>
+            </div>
+        </div>
+
+        <% if (applicationsByProject.length > 0) { %>
+            <div class="applications-container">
+                <% applicationsByProject.forEach((item, index) => { %>
+                    <div class="project-card" style="border: 1px solid #ddd; border-radius: 12px; padding: 1.5em; margin-bottom: 2em; background-color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1em;">
+                            <div>
+                                <h2 style="margin: 0 0 0.5em 0; color: #333; font-size: 1.5em;"><%= item.project.title %></h2>
+                                <div style="display: flex; gap: 2em; flex-wrap: wrap; margin-bottom: 1em;">
+                                    <div style="display: flex; align-items: center; gap: 0.5em;">
+                                        <span style="background-color: #007bff; color: white; padding: 0.3em 0.8em; border-radius: 20px; font-size: 0.8em;"><%= item.project.type %></span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 0.5em;">
+                                        <i class="fa-solid fa-euro-sign" style="color: #28a745;"></i>
+                                        <span style="font-weight: bold; color: #28a745;"><%= Number(item.project.price).toLocaleString('es-ES') %></span>
+                                    </div>
+                                    <% if (item.project.location) { %>
+                                        <div style="display: flex; align-items: center; gap: 0.5em;">
+                                            <i class="fa-solid fa-map-marker-alt" style="color: #6c757d;"></i>
+                                            <span style="color: #6c757d;"><%= item.project.location %></span>
+                                        </div>
+                                    <% } %>
+                                </div>
+                                <p style="margin: 0; color: #666; font-size: 0.9em;">
+                                    <strong>Created by:</strong> <%= item.project.createdBy ? item.project.createdBy.name : 'Unknown' %>
+                                </p>
+                            </div>
+                            <div style="text-align: center; padding: 1em; background-color: #f8f9fa; border-radius: 8px; min-width: 100px;">
+                                <h3 style="margin: 0; color: #ffc107;"><%= item.applications.length %></h3>
+                                <p style="margin: 0.2em 0 0 0; font-size: 0.8em; color: #666;">Applications</p>
+                            </div>
+                        </div>
+
+                        <% if (item.applications.length > 0) { %>
+                            <div class="applications-list">
+                                <h3 style="margin: 1em 0 0.5em 0; color: #333; font-size: 1.1em;">Professionals who applied:</h3>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1em;">
+                                    <% item.applications.forEach(professional => { %>
+                                        <div class="professional-card" style="border: 1px solid #e9ecef; border-radius: 8px; padding: 1em; background-color: #f8f9fa; position: relative; transition: all 0.2s ease; cursor: pointer;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                                            <a href="/client/pro/<%= professional._id %>" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 1; opacity: 0;" title="View <%= professional.name %>'s profile"></a>
+                                            <div style="display: flex; align-items: center; gap: 1em; margin-bottom: 0.5em;">
+                                                <div style="width: 40px; height: 40px; background-color: #007bff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                                                    <%= professional.name.charAt(0).toUpperCase() %>
+                                                </div>
+                                                                                            <div>
+                                                <h4 style="margin: 0; color: #333; font-size: 1em;">
+                                                    <a href="/client/pro/<%= professional._id %>" style="text-decoration: none; color: #333; transition: color 0.2s; cursor: pointer; display: inline-block; padding: 0.2em 0;" onmouseover="this.style.color='#007bff'; this.style.textDecoration='underline'" onmouseout="this.style.color='#333'; this.style.textDecoration='none'">
+                                                        <%= professional.name %>
+                                                        <i class="fa-solid fa-external-link-alt" style="margin-left: 0.3em; font-size: 0.8em;"></i>
+                                                    </a>
+                                                </h4>
+                                                <p style="margin: 0; color: #666; font-size: 0.8em;"><%= professional.email %></p>
+                                            </div>
+                                            </div>
+                                            <div style="display: flex; gap: 1em; flex-wrap: wrap; font-size: 0.8em;">
+                                                <% if (professional.sector) { %>
+                                                    <span style="background-color: #e9ecef; padding: 0.2em 0.5em; border-radius: 4px; color: #495057;">
+                                                        <%= professional.sector %>
+                                                    </span>
+                                                <% } %>
+                                                <% if (professional.location) { %>
+                                                    <span style="background-color: #e9ecef; padding: 0.2em 0.5em; border-radius: 4px; color: #495057;">
+                                                        <i class="fa-solid fa-map-marker-alt" style="margin-right: 0.2em;"></i><%= professional.location %>
+                                                    </span>
+                                                <% } %>
+                                                <% if (professional.experience) { %>
+                                                    <span style="background-color: #e9ecef; padding: 0.2em 0.5em; border-radius: 4px; color: #495057;">
+                                                        <%= professional.experience %> years exp.
+                                                    </span>
+                                                <% } %>
+                                            </div>
+                                            <div style="margin-top: 0.5em; text-align: center;">
+                                                <span style="background-color: #007bff; color: white; padding: 0.2em 0.5em; border-radius: 4px; font-size: 0.7em;">
+                                                    <i class="fa-solid fa-eye" style="margin-right: 0.2em;"></i>View Profile
+                                                </span>
+                                            </div>
+                                        </div>
+                                    <% }) %>
+                                </div>
+                            </div>
+                        <% } else { %>
+                            <div style="text-align: center; padding: 2em; background-color: #f8f9fa; border-radius: 8px; margin-top: 1em;">
+                                <i class="fa-solid fa-users" style="font-size: 2em; color: #6c757d; margin-bottom: 0.5em;"></i>
+                                <p style="margin: 0; color: #6c757d;">No applications yet</p>
+                            </div>
+                        <% } %>
+                    </div>
+                <% }) %>
+            </div>
+        <% } else { %>
+            <div style="text-align: center; padding: 4em; background-color: #f8f9fa; border-radius: 12px;">
+                <i class="fa-solid fa-folder-open" style="font-size: 3em; color: #6c757d; margin-bottom: 1em;"></i>
+                <h2 style="color: #6c757d; margin-bottom: 0.5em;">No Projects Found</h2>
+                <p style="color: #6c757d; margin-bottom: 2em;">There are no projects to display applications for.</p>
+                <a href="/client/projects" style="background-color: teal; color: white; padding: 0.8em 1.5em; text-decoration: none; border-radius: 0.5em; display: inline-block;">View Projects</a>
+            </div>
+        <% } %>
+    </div>
+</body>
+</html> 

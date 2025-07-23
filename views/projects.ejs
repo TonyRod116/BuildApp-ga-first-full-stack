@@ -24,7 +24,7 @@
                         <p><strong>Created by:</strong> <%= project.createdBy ? project.createdBy.name : 'Unknown' %></p>
                         <p><strong>Type:</strong> <%= project.type %></p>
                         <p><strong>Location:</strong> <%= project.location || 'Not specified' %></p>
-                        <p><strong>Budget:</strong> €<%= project.price %></p>
+                        <p><strong>Budget:</strong> €<%= Number(project.price).toLocaleString('es-ES') %></p>
                         <p><strong>Description:</strong> <%= project.description || 'No description' %></p>
                         
                         <% if (project.images && project.images.length > 0) { %>

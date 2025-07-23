@@ -3,26 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to BuildApp</title>
-    <link rel="stylesheet" href="/stylesheets/main.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Pacifico&family=Press+Start+2P&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <title>BuildApp - Welcome</title>
+    <%- include('partials/head') %>
+    <style>
+        .welcome-container {
+            max-width: 800px;
+            margin: 4em auto;
+            padding: 2em;
+            text-align: center;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .welcome-title {
+            font-size: 3em;
+            color: #006064;
+            margin-bottom: 0.5em;
+            font-weight: 900;
+        }
+        
+        .welcome-subtitle {
+            font-size: 1.3em;
+            color: #666;
+            margin-bottom: 2em;
+            line-height: 1.5;
+        }
+        
+        .welcome-buttons {
+            display: flex;
+            gap: 1em;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .welcome-btn {
+            padding: 1em 2em;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        .welcome-btn.primary {
+            background: #006064;
+            color: white;
+        }
+        
+        .welcome-btn.secondary {
+            background: #f8f9fa;
+            color: #006064;
+            border: 2px solid #006064;
+        }
+        
+        .welcome-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .features-preview {
+            margin-top: 3em;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2em;
+        }
+        
+        .feature-preview {
+            text-align: center;
+            padding: 1.5em;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .feature-preview i {
+            font-size: 2em;
+            color: #006064;
+            margin-bottom: 1em;
+        }
+        
+        .feature-preview h3 {
+            color: #333;
+            margin-bottom: 0.5em;
+        }
+        
+        .feature-preview p {
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
 </head>
-<body class="home-body">
-  <video autoplay muted loop id="bg-video">
-    <source src="/media/home_bg.mp4" type="video/mp4">
-  </video>
-  <%- include('partials/home_header') %>
-  <div>
-    <h1 class="home-buildapp-title">Welcome to BuildApp</h1>
-    <p class="home-content-slogan">The future of construction is here, <br>let's build it together!</p>
-  </div>
-  <div class="choose-role">
-    <p><button class="choose-role-button"><a href="/auth/client/register">I am a<br>CLIENT</a></button></p>
-    <p><button class="choose-role-button"><a href="/auth/pro/register">I am a<br>PROFESSIONAL</a></button></p>
-  </div>
-
-    <%- include('partials/footer') %>
+<body>
+    <%- include('partials/header') %>
+    
+    <div class="welcome-container">
+        <h1 class="welcome-title">Welcome to BuildApp</h1>
+        <p class="welcome-subtitle">
+            The platform that connects clients with verified professionals. 
+            Find the perfect match for your projects or showcase your skills to potential clients.
+        </p>
+        
+        <div class="welcome-buttons">
+            <a href="/client/pro-list" class="welcome-btn primary">Find Professionals</a>
+            <a href="/client/projects/public" class="welcome-btn secondary">Browse Projects</a>
+        </div>
+        
+        <div class="features-preview">
+            <div class="feature-preview">
+                <i class="fa-solid fa-users"></i>
+                <h3>Verified Professionals</h3>
+                <p>Connect with skilled and verified professionals in your area</p>
+            </div>
+            
+            <div class="feature-preview">
+                <i class="fa-solid fa-star"></i>
+                <h3>Rating System</h3>
+                <p>Make informed decisions with our comprehensive rating system</p>
+            </div>
+            
+            <div class="feature-preview">
+                <i class="fa-solid fa-folder-open"></i>
+                <h3>Project Management</h3>
+                <p>Create and manage projects with ease</p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

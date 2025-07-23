@@ -50,6 +50,11 @@ app.get('/', (req, res) => {
   res.render('index.ejs')
 })
 
+// Home select 
+app.get('/home', (req, res) => {
+  res.render('home.ejs')
+})
+
 // Router files 
 app.use('/auth', authRouter)
 app.use('/client', userRouter)

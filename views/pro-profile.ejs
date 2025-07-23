@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= professional.name %>'s Profile</title>
+    <%- include('partials/head') %>
+</head>
+<body>
+    <%- include('partials/header') %>
+    
+    <div class="container" style="margin: 2em auto; max-width: 1000px; padding: 0 2em;">
+        <!-- Back button -->
+        <div style="margin-bottom: 2em;">
+            <button onclick="history.back()" style="text-decoration: none; color: #007bff; display: flex; align-items: center; gap: 0.5em; font-size: 0.9em; background: none; border: none; cursor: pointer; padding: 0;">
+                <i class="fa-solid fa-arrow-left"></i>
+                Back
+            </button>
+        </div>
+
+        <!-- Professional Header -->
+        <div style="display: flex; align-items: center; gap: 2em; margin-bottom: 3em; padding: 2em; background-color: #f8f9fa; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <% if (professional.profilePic) { %>
+                <img src="<%= professional.profilePic %>" alt="Profile Image" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; box-shadow: 0 4px 12px rgba(0,0,0,0.2);" />
+            <% } else { %>
+                <div style="width: 120px; height: 120px; background: linear-gradient(45deg, #ff6b35, #f7931e); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 25px rgba(255,107,53,0.4); border: 4px solid rgba(255,255,255,0.3); position: relative;">
+                    <i class="fa-solid fa-user-tie" style="font-size: 3.5em; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);"></i>
+                </div>
+            <% } %>
+            <div style="flex: 1;">
+                <h1 style="margin: 0 0 0.5em 0; color: #333; font-size: 2.2em;"><%= professional.name %></h1>
+                <p style="margin: 0 0 1em 0; color: #666; font-size: 1.1em;"><%= professional.email %></p>
+                
+                <!-- Professional Type and Location -->
+                <div style="display: flex; gap: 1em; flex-wrap: wrap; margin-bottom: 0.8em;">
+                    <div style="display: flex; align-items: center; gap: 0.5em; background-color: #007bff; color: white; padding: 0.6em 1.2em; border-radius: 25px; font-size: 1em; font-weight: bold; box-shadow: 0 2px 4px rgba(0,123,255,0.2);">
+                        <i class="fa-solid fa-tools" style="font-size: 0.9em;"></i>
+                        <%= professional.sector || 'Profession not specified' %>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5em; background-color: #28a745; color: white; padding: 0.6em 1.2em; border-radius: 25px; font-size: 1em; font-weight: bold; box-shadow: 0 2px 4px rgba(40,167,69,0.2);">
+                        <i class="fa-solid fa-map-marker-alt" style="font-size: 0.9em;"></i>
+                        <%= professional.location || 'Location not specified' %>
+                    </div>
+                </div>
+                
+                <!-- Experience (smaller) -->
+                <div style="display: flex; align-items: center; gap: 0.5em; background-color: #ffc107; color: #333; padding: 0.4em 1em; border-radius: 20px; font-size: 0.9em; font-weight: bold; display: inline-block; box-shadow: 0 2px 4px rgba(255,193,7,0.2);">
+                    <i class="fa-solid fa-clock" style="font-size: 0.8em;"></i>
+                    <%= professional.experience || 0 %> years experience
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div style="display: flex; gap: 2em; margin-bottom: 3em; flex-wrap: wrap;">
+            <div style="text-align: center; padding: 1.5em; background-color: #f8f9fa; border-radius: 8px; min-width: 150px;">
+                <h3 style="margin: 0; color: #28a745;"><%= professional.images ? professional.images.length : 0 %></h3>
+                <p style="margin: 0.2em 0 0 0; font-size: 0.9em; color: #666;">Portfolio Photos</p>
+            </div>
+            <div style="text-align: center; padding: 1.5em; background-color: #f8f9fa; border-radius: 8px; min-width: 150px;">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 0.2em; margin-bottom: 0.5em;">
+                    <% for(let i = 1; i <= 5; i++) { %>
+                        <i class="fa-solid fa-star" style="color: <%= i <= (ratings && ratings.average ? ratings.average : 0) ? '#ffc107' : '#e0e0e0' %>; font-size: 1.2em;"></i>
+                    <% } %>
+                </div>
+                <h3 style="margin: 0; color: #ffc107;"><%= ratings && ratings.average ? ratings.average : 0 %></h3>
+                <p style="margin: 0.2em 0 0 0; font-size: 0.9em; color: #666;"><%= ratings && ratings.total ? ratings.total : 0 %> ratings</p>
+            </div>
+        </div>
+
+        <!-- Bio Section -->
+        <% if (professional.bio) { %>
+            <div style="margin-bottom: 3em; padding: 2em; background-color: #fff; border-radius: 12px; border: 1px solid #e9ecef;">
+                <h2 style="margin: 0 0 1em 0; color: #333;">About <%= professional.name %></h2>
+                <p style="margin: 0; color: #666; line-height: 1.6;"><%= professional.bio %></p>
+            </div>
+        <% } %>
+
+        <!-- Rating Section -->
+        <div style="margin-bottom: 3em; padding: 2em; background-color: #fff; border-radius: 12px; border: 1px solid #e9ecef;">
+            <h2 style="margin: 0 0 1em 0; color: #333;">Rate <%= professional.name %></h2>
+            
+            <% if (user.id !== professional._id.toString()) { %>
+                <div style="margin-bottom: 2em;">
+                    <div style="display: flex; align-items: center; gap: 1em; margin-bottom: 1em;">
+                        <span style="font-weight: bold; color: #333;">Your Rating:</span>
+                        <div class="star-rating" style="display: flex; gap: 0.2em;">
+                            <% for(let i = 1; i <= 5; i++) { %>
+                                <i class="fa-solid fa-star star" data-rating="<%= i %>" style="color: <%= i <= (ratings && ratings.userRating ? ratings.userRating : 0) ? '#ffc107' : '#e0e0e0' %>; font-size: 1.5em; cursor: pointer; transition: color 0.2s;" onmouseover="highlightStars(this)" onmouseout="resetStars()" onclick="selectRating(<%= i %>)"></i>
+                            <% } %>
+                        </div>
+                    </div>
+                    <textarea id="ratingReview" placeholder="Write a review about your experience (optional)" style="width: 100%; padding: 0.8em; border: 1px solid #ddd; border-radius: 0.5em; resize: vertical; min-height: 80px; font-family: inherit;"></textarea>
+                    <button onclick="submitRating('<%= professional._id %>')" style="background-color: #28a745; color: white; padding: 0.8em 1.5em; border: none; border-radius: 0.5em; cursor: pointer; margin-top: 1em; font-size: 1em;">Submit Rating</button>
+                </div>
+            <% } else { %>
+                <p style="color: #666; font-style: italic;">You cannot rate yourself.</p>
+            <% } %>
+            
+            <!-- Recent Ratings -->
+            <% if (ratings && ratings.recent && ratings.recent.length > 0) { %>
+                <div>
+                    <h3 style="margin: 1em 0 0.5em 0; color: #333;">Recent Reviews</h3>
+                    <div style="display: flex; flex-direction: column; gap: 1em;">
+                        <% ratings.recent.forEach(function(rating) { %>
+                            <div style="border: 1px solid #e9ecef; border-radius: 8px; padding: 1em; background-color: #f8f9fa;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5em;">
+                                    <span style="font-weight: bold; color: #333;"><%= rating.userId && rating.userId.name ? rating.userId.name : 'Anonymous' %></span>
+                                    <div style="display: flex; gap: 0.1em;">
+                                        <% for(let i = 1; i <= 5; i++) { %>
+                                            <i class="fa-solid fa-star" style="color: <%= i <= (rating.rating || 0) ? '#ffc107' : '#e0e0e0' %>; font-size: 0.9em;"></i>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <% if (rating.review) { %>
+                                    <p style="margin: 0; color: #666; font-style: italic;">"<%= rating.review %>"</p>
+                                <% } %>
+                                <p style="margin: 0.5em 0 0 0; color: #999; font-size: 0.8em;"><%= rating.createdAt ? new Date(rating.createdAt).toLocaleDateString() : 'Recent' %></p>
+                            </div>
+                        <% }); %>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+
+        <!-- Portfolio Gallery -->
+        <% if (professional.images && professional.images.length > 0) { %>
+            <div style="margin-bottom: 3em;">
+                <h2 style="margin: 0 0 1em 0; color: #333;">Portfolio Gallery</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1em;">
+                    <% professional.images.forEach(function(img, index) { %>
+                        <div style="border: 1px solid #ddd; border-radius: 8px; padding: 0.5em; background-color: #f9f9f9;">
+                            <img src="<%= img %>" alt="Portfolio Work" class="clickable-image" data-project-images="<%= professional.images.join('|') %>" data-image-index="<%= index %>" onclick="openImageModal(this)" style="width: 100%; height: 200px; object-fit: cover; border-radius: 5px; cursor: pointer;"/>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+        <% } %>
+    </div>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="image-modal" onclick="closeImageModal()">
+        <span class="close-modal" onclick="closeImageModal()">&times;</span>
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <img id="modalImage" class="modal-image" src="" alt="Portfolio Image">
+        </div>
+    </div>
+
+    <script>
+        let currentProjectImages = [];
+        let currentImageIndex = 0;
+
+        function openImageModal(imageElement) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            const projectImagesData = imageElement.dataset.projectImages.split('|');
+            const currentIndex = parseInt(imageElement.dataset.imageIndex);
+
+            modal.style.display = 'block';
+            modalImg.src = projectImagesData[currentIndex];
+
+            currentProjectImages = projectImagesData;
+            currentImageIndex = currentIndex;
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('imageModal');
+            modal.style.display = 'none';
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeImageModal();
+            }
+        });
+
+        // Rating functionality
+        let selectedRating = 0;
+
+        function highlightStars(starElement) {
+            const rating = parseInt(starElement.dataset.rating);
+            const stars = document.querySelectorAll('.star');
+            
+            stars.forEach(function(star, index) {
+                if (index < rating) {
+                    star.style.color = '#ffc107';
+                } else {
+                    star.style.color = '#e0e0e0';
+                }
+            });
+        }
+
+        function resetStars() {
+            const stars = document.querySelectorAll('.star');
+            stars.forEach(function(star, index) {
+                if (index < selectedRating) {
+                    star.style.color = '#ffc107';
+                } else {
+                    star.style.color = '#e0e0e0';
+                }
+            });
+        }
+
+        function selectRating(rating) {
+            selectedRating = rating;
+            const stars = document.querySelectorAll('.star');
+            
+            stars.forEach(function(star, index) {
+                if (index < rating) {
+                    star.style.color = '#ffc107';
+                } else {
+                    star.style.color = '#e0e0e0';
+                }
+            });
+        }
+
+        function submitRating(professionalId) {
+            if (selectedRating === 0) {
+                alert('Please select a rating before submitting.');
+                return;
+            }
+
+            const review = document.getElementById('ratingReview').value;
+            
+            fetch('/client/rate/' + professionalId, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    rating: selectedRating,
+                    review: review
+                })
+            })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
+                if (data.success) {
+                    alert('Rating submitted successfully!');
+                    location.reload();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(function(error) {
+                console.error('Error submitting rating:', error);
+                alert('Error submitting rating. Please try again.');
+            });
+        }
+    </script>
+</body>
+</html> 

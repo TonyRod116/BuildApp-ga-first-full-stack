@@ -1,7 +1,7 @@
 <header class="header">
 
   <div class="header-left">
-    <p class="client-header-title" style="margin-left: 1em;">BuildApp</p>
+    <a href="/" class="client-header-title" style="background: linear-gradient(45deg, #FFD700, #FFA500); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-shadow: none; margin-left: 1em; text-decoration: none; cursor: pointer; font-weight: bold; font-size: 1.6em;">BuildApp</a>
   </div>
   <div class="header-right">
     <% if (user && user.isPro) { %>
@@ -14,6 +14,7 @@
       <a href="/client/pro-list" class="client-header-profile">Find a Pro</a>
       <a href="/client/projects/new" class="client-header-profile">Create Project</a>
       <a href="/client/projects/public" class="client-header-profile">All Projects</a>
+      <a href="/client/applications" class="client-header-profile">Applications</a>
       <a href="/client/profile" class="client-header-profile">Profile</a>
       <a href="/auth/logout" class="client-header-sign-up-off">Log out</a>
     <% } else { %>

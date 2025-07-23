@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to BuildApp - Choose Your Path</title>
+    <%- include('partials/head') %>
+</head>
+  <body class="home-page">
+    <div class="hero-container">
+        <div class="floating-elements">
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+        </div>
+        
+        <div class="main-content">
+            <div class="logo-section">
+                <div class="logo">BuildApp</div>
+                <p class="tagline">Connecting Dreams with Professionals</p>
+                <p class="subtitle">The future of construction is here. Let's build it together</p>
+            </div>
+            
+            <h1 class="welcome-text">Welcome! Choose how you want to build your dreams</h1>
+            
+            <div class="role-grid">
+                <div class="role-card client" onclick="window.location.href='/auth/client/register'">
+                    <div class="role-icon">
+                        <i class="fa-solid fa-home"></i>
+                    </div>
+                    <h2 class="role-title">I'm a Client</h2>
+                    <p class="role-description">I have projects and need skilled professionals to bring my vision to life</p>
+                                         <ul class="role-features">
+                         <li>Post projects and get competitive quotes</li>
+                         <li>Find verified, rated professionals</li>
+                         <li>Manage projects from start to finish</li>
+                         <li>Review and rate professionals</li>
+                         <li>Connect with local professionals</li>
+                     </ul>
+                    <a href="/auth/client/register" class="role-btn">Start My Project</a>
+                </div>
+                
+                <div class="role-card professional" onclick="window.location.href='/auth/pro/register'">
+                    <div class="role-icon">
+                        <i class="fa-solid fa-tools"></i>
+                    </div>
+                    <h2 class="role-title">I'm a Professional</h2>
+                    <p class="role-description">I'm a skilled professional looking for exciting projects and opportunities</p>
+                                         <ul class="role-features">
+                         <li>Apply to projects that match your skills</li>
+                         <li>Showcase your portfolio and expertise</li>
+                         <li>Build your reputation and ratings</li>
+                         <li>Grow your professional network</li>
+                         <li>Connect with clients in your area</li>
+                     </ul>
+                    <a href="/auth/pro/register" class="role-btn">Find Projects</a>
+                </div>
+            </div>
+            
+            <div class="footer-links">
+                <a href="/auth/login" class="footer-link">
+                    <i class="fa-solid fa-sign-in-alt"></i> Already have an account? Login
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add smooth scroll behavior
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click handlers for better UX
+            const cards = document.querySelectorAll('.role-card');
+            cards.forEach(card => {
+                card.addEventListener('click', function(e) {
+                    if (e.target.tagName !== 'A') {
+                        const link = this.querySelector('a');
+                        if (link) {
+                            link.click();
+                        }
+                    }
+                });
+            });
+
+            // Add loading animation
+            const mainContent = document.querySelector('.main-content');
+            mainContent.style.opacity = '0';
+            mainContent.style.transform = 'translateY(30px)';
+            
+            setTimeout(() => {
+                mainContent.style.transition = 'all 0.8s ease-out';
+                mainContent.style.opacity = '1';
+                mainContent.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+</body>
+</html> 

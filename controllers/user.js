@@ -2,11 +2,40 @@ import User from '../models/user.js'
 import express from 'express'
 import Project from '../models/project.js'
 import Comment from '../models/comment.js'
+import ReviewsRating from '../models/reviewsRating.js'
 import multer from 'multer'
 import isClient from '../middleware/isClient.js';
 import isSignedIn from '../middleware/isSignedIn.js';
 
 const router = express.Router()
+
+// Simple welcome page route
+router.get('/', async (req, res) => {
+  try {
+    const user = req.session.user || null;
+    res.render('index', { user });
+  } catch (error) {
+    console.error('Error loading welcome page:', error);
+    res.status(500).render('index', { 
+      user: null,
+      error: 'Error loading welcome page'
+    });
+  }
+});
+
+// Marketing home page route
+router.get('/home', async (req, res) => {
+  try {
+    const user = req.session.user || null;
+    res.render('home', { user });
+  } catch (error) {
+    console.error('Error loading home page:', error);
+    res.status(500).render('home', { 
+      user: null,
+      error: 'Error loading home page'
+    });
+  }
+});
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -21,16 +50,37 @@ const upload = multer({ storage: storage });
 
 router.get('/pro-list', async (req, res) => {
   try {
-    const professionals = await User.find({ isPro: true })   
-    return res.render('proslist', { professionals })
+    const professionals = await User.find({ isPro: true });
+    
+    // Get ratings for each professional
+    const professionalsWithRatings = await Promise.all(professionals.map(async (professional) => {
+      const ratings = await ReviewsRating.find({ 
+        targetUserId: professional._id,
+        type: 'professional'
+      });
+      const totalRatings = ratings.length;
+      const averageRating = totalRatings > 0 
+        ? ratings.reduce((sum, r) => sum + r.rating, 0) / totalRatings 
+        : 0;
+      
+      return {
+        ...professional.toObject(),
+        rating: {
+          average: Math.round(averageRating * 10) / 10,
+          total: totalRatings
+        }
+      };
+    }));
+    
+    return res.render('proslist', { professionals: professionalsWithRatings });
   } catch (error) {
-    console.error('Error fetching professionals:', error)
+    console.error('Error fetching professionals:', error);
     res.status(500).render('proslist', { 
       professionals: [],
       error: 'Error loading professionals'
-    })
+    });
   }
-})
+});
 
 router.get('/profile', isSignedIn, async (req, res) => {
   try {
@@ -47,19 +97,41 @@ router.get('/profile', isSignedIn, async (req, res) => {
       });
     }
     
+    // Get ratings for professionals
+    let ratings = null;
+    if (user.isPro) {
+      const professionalRatings = await ReviewsRating.find({ 
+        targetUserId: user.id,
+        type: 'professional'
+      }).populate('userId', 'name');
+      
+      const totalRatings = professionalRatings.length;
+      const averageRating = totalRatings > 0 
+        ? professionalRatings.reduce((sum, r) => sum + r.rating, 0) / totalRatings 
+        : 0;
+      
+      ratings = {
+        average: Math.round(averageRating * 10) / 10,
+        total: totalRatings,
+        recent: professionalRatings.slice(0, 10) // Show last 10 ratings
+      };
+    }
+    
     return res.render('profile', {
       user,
       clientProjects,
       clientComments,
       isPro,
-      appliedProjects
+      appliedProjects,
+      ratings
     });
   } catch (error) {
     console.error('Error fetching user:', error);
     res.status(500).render('profile', { 
       user: null,
       error: 'Error loading user',
-      appliedProjects: []
+      appliedProjects: [],
+      ratings: null
     });
   }
 });
@@ -483,6 +555,199 @@ router.post('/profile/images/:imageIndex/delete', isSignedIn, async (req, res) =
   } catch (error) {
     console.error('Error deleting portfolio image:', error);
     res.status(500).render('error', { message: 'Error deleting portfolio image' });
+  }
+});
+
+// Route to show which professionals have applied to which projects
+router.get('/applications', isSignedIn, async (req, res) => {
+  try {
+    const user = req.session.user;
+    
+    // Get all projects with their applications
+    const projects = await Project.find()
+      .populate('createdBy', 'name email')
+      .populate('appliedBy', 'name email sector location experience');
+    
+    // Group applications by project
+    const applicationsByProject = projects.map(project => ({
+      project: {
+        id: project._id,
+        title: project.title,
+        type: project.type,
+        price: project.price,
+        location: project.location,
+        createdBy: project.createdBy
+      },
+      applications: project.appliedBy || []
+    }));
+    
+    res.render('applications', { 
+      user, 
+      applicationsByProject,
+      totalProjects: projects.length,
+      totalApplications: projects.reduce((sum, project) => sum + (project.appliedBy ? project.appliedBy.length : 0), 0)
+    });
+  } catch (error) {
+    console.error('Error fetching applications:', error);
+    res.status(500).render('error', { message: 'Error loading applications data' });
+  }
+});
+
+// Route to view a specific professional's profile
+router.get('/pro/:professionalId', isSignedIn, async (req, res) => {
+  try {
+    const professionalId = req.params.professionalId;
+    const user = req.session.user;
+    
+    // Find the professional
+    const professional = await User.findById(professionalId);
+    if (!professional || !professional.isPro) {
+      return res.status(404).render('error', { message: 'Professional not found' });
+    }
+    
+    // Get projects this professional has applied to
+    const appliedProjects = await Project.find({ 
+      appliedBy: professionalId 
+    }).populate('createdBy', 'name');
+    
+    // Get comments by this professional
+    const clientComments = await Comment.find({ 
+      user: professionalId 
+    }).populate('project', 'title');
+    
+    // Get ratings for this professional
+    const ratings = await ReviewsRating.find({ 
+      targetUserId: professionalId,
+      type: 'professional'
+    }).populate('userId', 'name');
+    
+    const totalRatings = ratings.length;
+    const averageRating = totalRatings > 0 
+      ? ratings.reduce((sum, r) => sum + r.rating, 0) / totalRatings 
+      : 0;
+    
+    // Check if current user has already rated this professional
+    const userRating = await ReviewsRating.findOne({ 
+      targetUserId: professionalId, 
+      userId: user.id,
+      type: 'professional'
+    });
+    
+    res.render('pro-profile', { 
+      user, 
+      professional,
+      appliedProjects,
+      clientComments,
+      ratings: {
+        average: Math.round(averageRating * 10) / 10,
+        total: totalRatings,
+        userRating: userRating ? userRating.rating : null,
+        recent: ratings.slice(0, 5) // Show last 5 ratings
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching professional profile:', error);
+    res.status(500).render('error', { message: 'Error loading professional profile' });
+  }
+});
+
+
+
+// Route to rate a professional
+router.post('/rate/:professionalId', isSignedIn, async (req, res) => {
+  try {
+    const { rating, review } = req.body;
+    const professionalId = req.params.professionalId;
+    const clientId = req.session.user.id;
+    
+    // Validate rating
+    if (!rating || rating < 1 || rating > 5) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Rating must be between 1 and 5' 
+      });
+    }
+    
+    // Check if professional exists and is actually a professional
+    const professional = await User.findById(professionalId);
+    if (!professional || !professional.isPro) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Professional not found' 
+      });
+    }
+    
+    // Check if client is not rating themselves
+    if (professionalId === clientId) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'You cannot rate yourself' 
+      });
+    }
+    
+    // Check if user has already rated this professional
+    const existingRating = await ReviewsRating.findOne({ 
+      targetUserId: professionalId, 
+      userId: clientId,
+      type: 'professional'
+    });
+    
+    if (existingRating) {
+      // Update existing rating
+      existingRating.rating = rating;
+      existingRating.review = review;
+      await existingRating.save();
+    } else {
+      // Create new rating
+      await ReviewsRating.create({
+        type: 'professional',
+        userId: clientId,
+        targetUserId: professionalId,
+        rating: rating,
+        review: review
+      });
+    }
+    
+    res.json({ 
+      success: true, 
+      message: 'Rating submitted successfully' 
+    });
+  } catch (error) {
+    console.error('Error submitting rating:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error submitting rating' 
+    });
+  }
+});
+
+// Route to get professional's average rating
+router.get('/rating/:professionalId', async (req, res) => {
+  try {
+    const professionalId = req.params.professionalId;
+    
+    const ratings = await ReviewsRating.find({ 
+      targetUserId: professionalId,
+      type: 'professional'
+    }).populate('userId', 'name');
+    
+    const totalRatings = ratings.length;
+    const averageRating = totalRatings > 0 
+      ? ratings.reduce((sum, r) => sum + r.rating, 0) / totalRatings 
+      : 0;
+    
+    res.json({
+      success: true,
+      averageRating: Math.round(averageRating * 10) / 10, // Round to 1 decimal
+      totalRatings,
+      ratings: ratings.slice(0, 10) // Return last 10 ratings
+    });
+  } catch (error) {
+    console.error('Error fetching ratings:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error fetching ratings' 
+    });
   }
 });
 
