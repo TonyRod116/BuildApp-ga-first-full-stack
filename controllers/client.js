@@ -4,6 +4,7 @@ import Project from '../models/project.js'
 import Comment from '../models/comment.js'
 import multer from 'multer'
 import isClient from '../middleware/isClient.js';
+import isSignedIn from '../middleware/isSignedIn.js';
 
 const router = express.Router()
 
@@ -18,6 +19,39 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+// Application route for professionals - moved to top to avoid conflicts
+router.post('/projects/:id/apply', async (req, res) => {
+  try {
+    const user = req.session.user;
+    if (!user || !user.isPro) {
+      return res.status(401).render('error', { message: 'You must be logged in as a professional to apply' });
+    }
+    
+    const projectId = req.params.id;
+    const project = await Project.findById(projectId);
+    if (!project) {
+      return res.status(404).render('error', { message: 'Project not found' });
+    }
+    
+    // Check if already applied
+    if (project.appliedBy && project.appliedBy.includes(user.id)) {
+      return res.status(400).render('error', { message: 'You have already applied to this project' });
+    }
+    
+    // Add professional to project's appliedBy array
+    if (!project.appliedBy) {
+      project.appliedBy = [];
+    }
+    project.appliedBy.push(user.id);
+    await project.save();
+    
+    res.redirect('/client/projects/public');
+  } catch (error) {
+    console.error('Error applying to project:', error);
+    res.status(500).render('error', { message: 'Error applying to project' });
+  }
+});
+
 router.get('/pro-list', async (req, res) => {
   try {
     const professionals = await User.find({ isPro: true })   
@@ -31,29 +65,39 @@ router.get('/pro-list', async (req, res) => {
   }
 })
 
-router.get('/profile', isClient, async (req, res) => {
+router.get('/profile', isSignedIn, async (req, res) => {
   try {
     const user = req.session.user; 
     const isPro = await User.find({ isPro: true });
     const clientProjects = await Project.find({ createdBy: user.id });
     const clientComments = await Comment.find({ user: user.id });
 
+    // For professionals, get their applied projects
+    let appliedProjects = [];
+    if (user.isPro) {
+      appliedProjects = await Project.find({ 
+        appliedBy: { $in: [user.id] } 
+      });
+    }
+
     return res.render('profile', {
       user,
       clientProjects,
       clientComments,
       isPro,
+      appliedProjects
     });
   } catch (error) {
     console.error('Error fetching user:', error);
     res.status(500).render('profile', { 
       user: null,
-      error: 'Error loading user'
+      error: 'Error loading user',
+      appliedProjects: []
     });
   }
 });
 
-router.get('/edit-profile', isClient, async (req, res) => {
+router.get('/edit-profile', isSignedIn, async (req, res) => {
   try {
     const user = req.session.user;
     return res.render('edit-profile', { user });
@@ -66,7 +110,7 @@ router.get('/edit-profile', isClient, async (req, res) => {
   }
 });
 
-router.post('/edit-profile', isClient, upload.single('profilePic'), async (req, res) => {
+router.post('/edit-profile', isSignedIn, upload.single('profilePic'), async (req, res) => {
   try {
     const user = req.session.user;
     const { name, email } = req.body;
@@ -177,7 +221,7 @@ router.post('/projects/:id/comment', async (req, res) => {
   }
 });
 
-router.get('/projects/new', isClient, async (req, res) => {
+router.get('/projects/new', isSignedIn, async (req, res) => {
   try {
     const user = req.session.user;
     res.render('new-project', { user });
@@ -190,7 +234,7 @@ router.get('/projects/new', isClient, async (req, res) => {
   }
 });
 
-router.post('/projects', isClient, upload.array('images', 4), async (req, res) => {
+router.post('/projects', isSignedIn, upload.array('images', 4), async (req, res) => {
   try {
     const user = req.session.user;
     const { title, description, location, type, price } = req.body;
@@ -225,7 +269,7 @@ router.post('/projects', isClient, upload.array('images', 4), async (req, res) =
   }
 });
 
-router.get('/projects/:id/edit', isClient, async (req, res) => {
+router.get('/projects/:id/edit', isSignedIn, async (req, res) => {
   try {
     const user = req.session.user;
     const project = await Project.findOne({ _id: req.params.id, createdBy: user.id });
@@ -239,7 +283,7 @@ router.get('/projects/:id/edit', isClient, async (req, res) => {
   }
 });
 
-router.post('/projects/:id/edit', isClient, upload.array('images', 4), async (req, res) => {
+router.post('/projects/:id/edit', isSignedIn, upload.array('images', 4), async (req, res) => {
   try {
     const user = req.session.user;
     const { title, description, location, type, price } = req.body;
@@ -264,7 +308,7 @@ router.post('/projects/:id/edit', isClient, upload.array('images', 4), async (re
   }
 });
 
-router.post('/projects/:id/delete', isClient, async (req, res) => {
+router.post('/projects/:id/delete', isSignedIn, async (req, res) => {
   try {
     const user = req.session.user;
     const project = await Project.findOne({ _id: req.params.id, createdBy: user.id });
@@ -279,7 +323,7 @@ router.post('/projects/:id/delete', isClient, async (req, res) => {
   }
 });
 
-router.post('/projects/:id/images/:imageIndex/delete', isClient, async (req, res) => {
+router.post('/projects/:id/images/:imageIndex/delete', isSignedIn, async (req, res) => {
   try {
     const user = req.session.user;
     const project = await Project.findOne({ _id: req.params.id, createdBy: user.id });

@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema({
   images: { type: [String], required: false },
   comments: { type: [String], required: false },
   rating: { type: Number, required: false, default: 0 },
+  appliedTo: { type: [mongoose.Schema.Types.ObjectId], ref: 'Project', required: false },
 })
 
 userSchema.pre('save', function(next){

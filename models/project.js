@@ -11,6 +11,7 @@ const projectSchema = new mongoose.Schema({
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   executedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false },
   comments: { type: [String], required: false },
+  appliedBy: { type: [mongoose.Schema.Types.ObjectId], ref: 'User', required: false },
 })
 
 const Project = mongoose.model('Project', projectSchema)

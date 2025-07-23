@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+    <%- include('partials/head') %>
+</head>
+<body>
+    <%- include('partials/header') %>
+    <div class="error-container" style="text-align: center; margin-top: 2em; padding: 2em;">
+        <h1 style="color: #dc3545; margin-bottom: 1em;">Oops! Something went wrong</h1>
+        <div class="error-message" style="background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 0.5em; padding: 1em; margin: 1em 0; color: #721c24;">
+            <p style="margin: 0; font-size: 1.1em;"><%= message || 'An error occurred. Please try again.' %></p>
+        </div>
+        <div class="error-actions" style="margin-top: 2em;">
+            <a href="/client/projects/public" class="btn" style="background-color: #007bff; color: white; padding: 0.5em 1em; text-decoration: none; border-radius: 0.3em; margin: 0.5em;">Go to Projects</a>
+            <a href="/client/profile" class="btn" style="background-color: #28a745; color: white; padding: 0.5em 1em; text-decoration: none; border-radius: 0.3em; margin: 0.5em;">Go to Profile</a>
+            <a href="/" class="btn" style="background-color: #6c757d; color: white; padding: 0.5em 1em; text-decoration: none; border-radius: 0.3em; margin: 0.5em;">Go Home</a>
+        </div>
+    </div>
+</body>
+</html> 

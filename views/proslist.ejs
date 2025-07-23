@@ -3,27 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Find Professionls Near You</title>
+    <title>Find Professionals Near You</title>
     <%- include('partials/head') %>
 </head>
 <body>
     <%- include('partials/header') %>
-    <h1 style="text-align: center; margin-top: 2em;">Find Professionals Near You</h1>
-    
-    <% if (professionals && professionals.length > 0) { %>
-        <div class="pro-list">
-            <% professionals.forEach(pro => { %>
-                <div class="pro-card">
-                    <h3><%= pro.name %></h3>
-                    <p><strong>Profession:</strong> <%= pro.sector %></p>
-                    <p><strong>Location:</strong> <%= pro.location %></p>
-                    <p><strong>Experience:</strong> <%= pro.experience %> years</p>
-                    <p><strong>Bio:</strong> <%= pro.bio %></p>
-                </div>
-            <% }); %>
+    <div class="client-profile-container down-fivepercent" style="margin-left: 2em;">
+        <h2>Find Professionals Near You</h2>
+        
+        <% if (professionals && professionals.length > 0) { %>
+            <div class="pro-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2em; margin-top: 2em;">
+                <% professionals.forEach(pro => { %>
+                    <div class="pro-card" style="border: 1px solid #ddd; padding: 1.5em; border-radius: 0.5em; background-color: #f9f9f9; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                        <div style="display: flex; align-items: center; margin-bottom: 1em;">
+                            <div class="profile-pic-circle" style="margin-right: 1em;">
+                                <% if (pro.profilePic) { %>
+                                    <img src="<%= pro.profilePic %>" alt="Profile Image" />
+                                <% } else { %>
+                                    <i class="fa-solid fa-user"></i>
+                                <% } %>
+                            </div>
+                            <div>
+                                <h3 style="margin: 0; color: #333;"><%= pro.name %></h3>
+                                <p style="margin: 0.2em 0; color: #666; font-size: 0.9em;"><strong>Profession:</strong> <%= pro.sector || 'Not specified' %></p>
+                                <p style="margin: 0.2em 0; color: #666; font-size: 0.9em;"><strong>Location:</strong> <%= pro.location || 'Not specified' %></p>
+                                <p style="margin: 0.2em 0; color: #666; font-size: 0.9em;"><strong>Experience:</strong> <%= pro.experience || 0 %> years</p>
+                            </div>
+                        </div>
+                        
+                        <% if (pro.bio) { %>
+                            <p style="margin: 0.5em 0; color: #555; font-style: italic;"><%= pro.bio %></p>
+                        <% } %>
+                        
+                        <!-- Portfolio Gallery -->
+                        <% if (pro.images && pro.images.length > 0) { %>
+                            <div style="margin-top: 1em;">
+                                <h4 style="margin: 0 0 0.5em 0; color: #333; font-size: 1em;">Portfolio Gallery</h4>
+                                <div class="portfolio-gallery" style="display: flex; gap: 0.5em; flex-wrap: wrap;">
+                                    <% pro.images.slice(0, 4).forEach((img, index) => { %>
+                                        <img src="<%= img %>" alt="Portfolio Work" class="clickable-image" data-project-images="<%= pro.images.join('|') %>" data-image-index="<%= index %>" onclick="openImageModal(this)" style="width: 80px; height: 80px; object-fit: cover; border-radius: 5px; cursor: pointer; border: 2px solid #ddd;"/>
+                                    <% }) %>
+                                    <% if (pro.images.length > 4) { %>
+                                        <div style="width: 80px; height: 80px; background-color: #e0e0e0; border-radius: 5px; display: flex; align-items: center; justify-content: center; border: 2px solid #ddd; color: #666; font-size: 0.8em;">
+                                            +<%= pro.images.length - 4 %> more
+                                        </div>
+                                    <% } %>
+                                </div>
+                            </div>
+                        <% } %>
+                        
+                        <div style="margin-top: 1em; display: flex; gap: 0.5em;">
+                            <button class="btn" style="background-color: teal; color: white; padding: 0.5em 1em; border: none; border-radius: 0.3em; cursor: pointer; font-size: 0.9em;">Contact Professional</button>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <div style="text-align: center; padding: 3em; background-color: #f8f9fa; border-radius: 8px; border: 2px dashed #ddd;">
+                <i class="fa-solid fa-users" style="font-size: 3em; color: #ccc; margin-bottom: 1em;"></i>
+                <p style="color: #666;">No professionals found.</p>
+                <p style="color: #999; font-size: 0.9em;">Check back later for new professionals in your area.</p>
+            </div>
+        <% } %>
+    </div>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="image-modal" onclick="closeImageModal()">
+        <span class="close-modal" onclick="closeImageModal()">&times;</span>
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <img id="modalImage" class="modal-image" src="" alt="Portfolio Image">
         </div>
-    <% } else { %>
-        <p>No professionals found.</p>
-    <% } %>
+    </div>
+
+    <script>
+        let currentProjectImages = [];
+        let currentImageIndex = 0;
+
+        function openImageModal(imageElement) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            const projectImagesData = imageElement.dataset.projectImages.split('|');
+            const currentIndex = parseInt(imageElement.dataset.imageIndex);
+
+            modal.style.display = 'block';
+            modalImg.src = projectImagesData[currentIndex];
+
+            currentProjectImages = projectImagesData;
+            currentImageIndex = currentIndex;
+
+            // Initialize image navigation
+            const modalContent = document.querySelector('.modal-content');
+            const prevBtn = document.createElement('span');
+            prevBtn.className = 'prev';
+            prevBtn.innerHTML = '&lt;';
+            modalContent.appendChild(prevBtn);
+
+            const nextBtn = document.createElement('span');
+            nextBtn.className = 'next';
+            nextBtn.innerHTML = '&gt;';
+            modalContent.appendChild(nextBtn);
+
+            // Add event listeners for navigation
+            prevBtn.onclick = function() { changeImage(-1); };
+            nextBtn.onclick = function() { changeImage(1); };
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+
+        function changeImage(direction) {
+            currentImageIndex += direction;
+            if (currentImageIndex >= currentProjectImages.length) {
+                currentImageIndex = 0;
+            }
+            if (currentImageIndex < 0) {
+                currentImageIndex = currentProjectImages.length - 1;
+            }
+            document.getElementById('modalImage').src = currentProjectImages[currentImageIndex];
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('imageModal');
+            if (event.target === modal) {
+                closeImageModal();
+            }
+        }
+    </script>
 </body>
 </html>

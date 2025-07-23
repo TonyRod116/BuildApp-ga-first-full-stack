@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Projects</title>
     <%- include('partials/head') %>
+    <link rel="stylesheet" href="/stylesheets/modal.css">
+    <script src="/js/project-actions.js"></script>
 </head>
 <body>
     <%- include('partials/header') %>
@@ -27,8 +29,8 @@
                         
                         <% if (project.images && project.images.length > 0) { %>
                             <div class="project-gallery" style="display: flex; gap: 0.5em; margin-top: 1em;">
-                                <% project.images.forEach(img => { %>
-                                    <img src="<%= img %>" alt="Project Image" style="width: 100px; height: 100px; object-fit: cover; border-radius: 5px;"/>
+                                <% project.images.forEach((img, index) => { %>
+                                    <img src="<%= img %>" alt="Project Image" class="clickable-image" data-project-images="<%= project.images.join('|') %>" data-image-index="<%= index %>" onclick="openImageModal(this)" style="width: 100px; height: 100px; object-fit: cover; border-radius: 5px;"/>
                                 <% }) %>
                             </div>
                         <% } %>
@@ -41,45 +43,69 @@
                                 </form>
                             <% } %>
                             <% if (user && user.isPro) { %>
-                                <form action="/client/projects/<%= project._id %>/apply" method="POST" style="display: inline;">
-                                    <button type="submit" class="btn" style="background-color: rgb(1,97,97); color: white; padding: 0.5em 1em; border-radius: 0.3em; font-size: 0.9em; border: none; cursor: pointer;">
+                                <% if (project.hasApplied) { %>
+                                    <button type="button" class="btn project-action-btn" data-action="cancel" data-project-id="<%= project._id %>" style="background-color: #dc3545; color: white; padding: 0.5em 1em; border-radius: 0.3em; font-size: 0.9em; border: none; cursor: pointer;">
+                                        Cancel Application
+                                    </button>
+                                <% } else { %>
+                                    <button type="button" class="btn project-action-btn" data-action="apply" data-project-id="<%= project._id %>" style="background-color: rgb(1,97,97); color: white; padding: 0.5em 1em; border-radius: 0.3em; font-size: 0.9em; border: none; cursor: pointer;">
                                         Apply to Project
                                     </button>
-                                </form>
+                                <% } %>
                             <% } %>
                         </div>
                         
                         <!-- Comments Section -->
                         <div class="project-comments" style="margin-top: 1em; border-top: 1px solid #ddd; padding-top: 1em;">
-                            <h4>Comments</h4>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5em;">
+                                <h5 style="margin: 0;">Comments (<%= project.comments ? project.comments.length : 0 %>)</h5>
+                                <button type="button" class="toggle-comments-btn" onclick="toggleComments(this)" style="background: none; border: none; color: #007bff; cursor: pointer; font-size: 0.8em; text-decoration: underline;">
+                                    Show comments
+                                </button>
+                            </div>
                             
-                            <% if (user) { %>
-                                <!-- Add Comment Form -->
-                                <form action="/client/projects/<%= project._id %>/comment" method="POST" style="margin-bottom: 1em;">
-                                    <textarea name="comment" placeholder="Add a comment..." style="width: 100%; min-height: 60px; padding: 0.5em; border: 1px solid #ddd; border-radius: 0.3em; resize: vertical;" required></textarea>
-                                    <button type="submit" style="background-color: #28a745; color: white; padding: 0.5em 1em; border: none; border-radius: 0.3em; cursor: pointer; margin-top: 0.5em;">Add Comment</button>
-                                </form>
-                            <% } else { %>
-                                <p style="color: #666; font-style: italic;">Please <a href="/auth/login">login</a> to add comments.</p>
-                            <% } %>
-                            
-                            <!-- Display Comments -->
-                            <% if (project.comments && project.comments.length > 0) { %>
-                                <div class="comments-list">
-                                    <% project.comments.forEach(comment => { %>
-                                        <div class="comment" style="border: 1px solid #eee; padding: 0.8em; margin: 0.5em 0; border-radius: 0.3em; background-color: #f9f9f9;">
-                                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5em;">
-                                                <strong style="color: #333;"><%= comment.userName %></strong>
-                                                <small style="color: #666;"><%= new Date(comment.createdAt).toLocaleDateString() %></small>
+                            <div class="comments-container" style="display: none;">
+                                <% if (user) { %>
+                                    <!-- Add Comment Form -->
+                                    <form action="/client/projects/<%= project._id %>/comment" method="POST" style="margin-bottom: 0.5em;">
+                                        <textarea name="comment" placeholder="Add a comment..." style="width: 100%; min-height: 40px; padding: 0.3em; border: 1px solid #ddd; border-radius: 0.3em; resize: vertical; font-size: 0.8em;" required></textarea>
+                                        <button type="submit" style="background-color: #28a745; color: white; padding: 0.3em 0.8em; border: none; border-radius: 0.3em; cursor: pointer; margin-top: 0.3em; font-size: 0.8em;">Add Comment</button>
+                                    </form>
+                                <% } else { %>
+                                    <p style="color: #666; font-style: italic; font-size: 0.8em; margin: 0.3em 0;">Please <a href="/auth/login">login</a> to add comments.</p>
+                                <% } %>
+                                
+                                <!-- Display Comments -->
+                                <% if (project.comments && project.comments.length > 0) { %>
+                                    <div class="comments-list" style="max-height: 200px; overflow-y: auto;">
+                                        <% project.comments.forEach(comment => { %>
+                                            <div class="comment" style="border: 1px solid #eee; padding: 0.4em; margin: 0.3em 0; border-radius: 0.2em; background-color: #f9f9f9; font-size: 0.8em;">
+                                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.2em;">
+                                                    <strong style="color: #333; font-size: 0.9em;"><%= comment.userName %></strong>
+                                                    <small style="color: #666; font-size: 0.7em;"><%= new Date(comment.createdAt).toLocaleDateString() %></small>
+                                                </div>
+                                                <p style="margin: 0; color: #555; font-size: 0.8em; line-height: 1.3;"><%= comment.comment %></p>
                                             </div>
-                                            <p style="margin: 0; color: #555;"><%= comment.comment %></p>
-                                        </div>
-                                    <% }) %>
-                                </div>
-                            <% } else { %>
-                                <p style="color: #666; font-style: italic;">No comments yet. Be the first to comment!</p>
-                            <% } %>
+                                        <% }) %>
+                                    </div>
+                                <% } else { %>
+                                    <p style="color: #666; font-style: italic; font-size: 0.8em; margin: 0.3em 0;">No comments yet. Be the first to comment!</p>
+                                <% } %>
+                            </div>
                         </div>
+                        <!-- Hide / Show comments script -->
+                        <script>
+                            function toggleComments(button) {
+                                const container = button.parentElement.nextElementSibling;
+                                if (container.style.display === 'none') {
+                                    container.style.display = 'block';
+                                    button.textContent = 'Hide comments';
+                                } else {
+                                    container.style.display = 'none';
+                                    button.textContent = 'Show comments';
+                                }
+                            }
+                        </script>
                     </div>
                 <% }) %>
             </div>
@@ -87,5 +113,72 @@
             <p>No projects found.</p>
         <% } %>
     </div>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="image-modal" onclick="closeImageModal()">
+        <span class="close-modal" onclick="closeImageModal()">&times;</span>
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <img id="modalImage" class="modal-image" src="" alt="Project Image">
+        </div>
+    </div>
+
+    <script>
+        let currentProjectImages = [];
+        let currentImageIndex = 0;
+
+        function openImageModal(imageElement) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            const projectImagesData = imageElement.dataset.projectImages.split('|');
+            const currentIndex = parseInt(imageElement.dataset.imageIndex);
+
+            modal.style.display = 'block';
+            modalImg.src = projectImagesData[currentIndex];
+
+            currentProjectImages = projectImagesData;
+            currentImageIndex = currentIndex;
+
+            // Initialize image navigation
+            const modalContent = document.querySelector('.modal-content');
+            const prevBtn = document.createElement('span');
+            prevBtn.className = 'prev';
+            prevBtn.innerHTML = '&lt;';
+            modalContent.appendChild(prevBtn);
+
+            const nextBtn = document.createElement('span');
+            nextBtn.className = 'next';
+            nextBtn.innerHTML = '&gt;';
+            modalContent.appendChild(nextBtn);
+
+            prevBtn.addEventListener('click', () => {
+                const prevIndex = (currentImageIndex - 1 + currentProjectImages.length) % currentProjectImages.length;
+                modalImg.src = currentProjectImages[prevIndex];
+                currentImageIndex = prevIndex;
+            });
+
+            nextBtn.addEventListener('click', () => {
+                const nextIndex = (currentImageIndex + 1) % currentProjectImages.length;
+                modalImg.src = currentProjectImages[nextIndex];
+                currentImageIndex = nextIndex;
+            });
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    closeImageModal();
+                }
+            });
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('imageModal');
+            modal.style.display = 'none';
+            // Remove navigation buttons
+            const modalContent = document.querySelector('.modal-content');
+            modalContent.innerHTML = '';
+            currentProjectImages = [];
+            currentImageIndex = 0;
+        }
+    </script>
 </body>
 </html> 

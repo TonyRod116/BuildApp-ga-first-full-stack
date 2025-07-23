@@ -8,7 +8,7 @@
 </head>
 <body>
     <%- include('partials/header') %>
-    <div class="client-profile-container down-fivepercent">
+    <div class="client-profile-container down-fivepercent" style="margin-left: 2em;">
       <div class="client-profile-container" style="margin: 0 auto; display: flex; flex-direction: column; align-items: center;">
         <div class="profile-pic-circle">
           <% if (user.profilePic) { %>
@@ -20,22 +20,50 @@
         <h2 style="margin-top: 1em; text-align: center;">Edit <%= user.name %>'s profile</h2>
       </div>
       <div class="client-profile-right">
-        <form action="/client/edit-profile" method="POST" enctype="multipart/form-data" class="form">
-          <label for="profilePic">Change profile picture:</label>
-          <input type="file" name="profilePic" id="profilePic" accept="image/*">
+        <form action="/client/edit-profile" method="POST" enctype="multipart/form-data" class="form" style="max-width: 500px; margin: 0 auto;">
+          
+          <div style="margin-bottom: 1.5em;">
+            <label for="profilePic" style="display: block; margin-bottom: 0.5em; font-weight: bold;">Change profile picture:</label>
+            <input type="file" name="profilePic" id="profilePic" accept="image/*" style="width: 100%; padding: 0.5em; border: 1px solid #ddd; border-radius: 0.3em;">
+          </div>
 
-          <label for="name">Name:</label>
-          <input type="text" name="name" id="name" value="<%= user.name %>" required>
+          <div style="margin-bottom: 1.5em;">
+            <label for="name" style="display: block; margin-bottom: 0.5em; font-weight: bold;">Name:</label>
+            <input type="text" name="name" id="name" value="<%= user.name %>" required style="width: 100%; padding: 0.5em; border: 1px solid #ddd; border-radius: 0.3em;">
+          </div>
 
-          <label for="email">Email:</label>
-          <input type="email" name="email" id="email" value="<%= user.email %>" required>
+          <div style="margin-bottom: 1.5em;">
+            <label for="email" style="display: block; margin-bottom: 0.5em; font-weight: bold;">Email:</label>
+            <input type="email" name="email" id="email" value="<%= user.email %>" required style="width: 100%; padding: 0.5em; border: 1px solid #ddd; border-radius: 0.3em;">
+          </div>
 
-          <button type="submit">Save changes</button>
+          <% if (user.isPro) { %>
+            <div style="margin-bottom: 1.5em;">
+              <label for="sector" style="display: block; margin-bottom: 0.5em; font-weight: bold;">Profession:</label>
+              <input type="text" name="sector" id="sector" value="<%= user.sector || '' %>" placeholder="e.g., Renovator, Painter, Electrician, etc." style="width: 100%; padding: 0.5em; border: 1px solid #ddd; border-radius: 0.3em;">
+            </div>
+
+            <div style="margin-bottom: 1.5em;">
+              <label for="location" style="display: block; margin-bottom: 0.5em; font-weight: bold;">Location:</label>
+              <input type="text" name="location" id="location" value="<%= user.location || '' %>" placeholder="e.g., Madrid, Spain" style="width: 100%; padding: 0.5em; border: 1px solid #ddd; border-radius: 0.3em;">
+            </div>
+
+            <div style="margin-bottom: 1.5em;">
+              <label for="experience" style="display: block; margin-bottom: 0.5em; font-weight: bold;">Years of Experience:</label>
+              <input type="number" name="experience" id="experience" value="<%= user.experience || 0 %>" min="0" max="50" style="width: 100%; padding: 0.5em; border: 1px solid #ddd; border-radius: 0.3em;">
+            </div>
+
+            <div style="margin-bottom: 1.5em;">
+              <label for="bio" style="display: block; margin-bottom: 0.5em; font-weight: bold;">Bio:</label>
+              <textarea name="bio" id="bio" rows="4" placeholder="Tell us about your skills, experience, and what makes you unique..." style="width: 100%; padding: 0.5em; border: 1px solid #ddd; border-radius: 0.3em; resize: vertical;"><%= user.bio || '' %></textarea>
+            </div>
+          <% } %>
+
+          <div style="display: flex; gap: 1em; margin-top: 2em;">
+            <button type="submit" style="background-color: teal; color: white; padding: 0.8em 1.5em; border: none; border-radius: 0.3em; cursor: pointer; font-size: 1em;">Save Changes</button>
+            <a href="/client/profile" style="background-color: #6c757d; color: white; padding: 0.8em 1.5em; border: none; border-radius: 0.3em; text-decoration: none; font-size: 1em;">Cancel</a>
+          </div>
         </form>
-        
-        <div style="margin-top: 1em; text-align: center;">
-            <a href="/client/profile" class= "form" style="background-color: #6c757d; color: white; padding: 0.3rem; border: none; border-radius: 0.3em; font-size: 0.8em; cursor: pointer; margin-top: 0em; text-decoration: none; display: inline-block;">Cancel</a>
-        </div>
       </div>
     </div>
 </body>
