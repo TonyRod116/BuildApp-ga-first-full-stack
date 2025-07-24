@@ -16,7 +16,7 @@ Getting Started / Code Installation
    MONGODB_URI=mongodb://localhost:27017/buildapp
    SESSION_SECRET=your_secret
    PORT=3000
-4. Start the server:
+5. Start the server:
    npm start
 
 Timeframe & Working Team:
