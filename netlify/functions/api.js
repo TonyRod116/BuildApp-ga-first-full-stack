@@ -10,7 +10,6 @@ import dotenv from 'dotenv'
 import morgan from 'morgan'
 import multer from 'multer'
 import path from 'path'
-import { fileURLToPath } from 'url'
 import { library, icon } from '@fortawesome/fontawesome-svg-core'
 import isSignedIn from '../../middleware/isSignedIn.js'
 import passUserToView from '../../middleware/passUserToView.js'
@@ -18,16 +17,13 @@ import userRouter from '../../controllers/user.js'
 import authRouter from '../../controllers/auth.js'
 import serverless from 'serverless-http'
 
-// Get current directory for ES modules
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
 const app = express()
 
 // * -------- Middleware Configuration --------
 app.set('view engine', 'ejs')
-app.set('views', path.join(__dirname, '../../views'))
-app.use(express.static(path.join(__dirname, '../../public')))
+// Use relative paths that work in Netlify Functions
+app.set('views', path.join(process.cwd(), 'views'))
+app.use(express.static(path.join(process.cwd(), 'public')))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(methodOverride('_method'))
