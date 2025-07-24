@@ -9,22 +9,26 @@ import MongoStore from 'connect-mongo'
 import dotenv from 'dotenv'
 import morgan from 'morgan'
 import multer from 'multer'
+import path from 'path'
+import { fileURLToPath } from 'url'
 import { library, icon } from '@fortawesome/fontawesome-svg-core'
 import isSignedIn from '../../middleware/isSignedIn.js'
 import passUserToView from '../../middleware/passUserToView.js'
 import userRouter from '../../controllers/user.js'
 import authRouter from '../../controllers/auth.js'
 import serverless from 'serverless-http'
-import bodyParser from '../../middleware/bodyParser.js'
 
+// Get current directory for ES modules
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 const app = express()
 
 // * -------- Middleware Configuration --------
 app.set('view engine', 'ejs')
-app.set('views', '../../views')
-app.use(express.static('../../public'))
-app.use(bodyParser)
+app.set('views', path.join(__dirname, '../../views'))
+app.use(express.static(path.join(__dirname, '../../public')))
+app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(methodOverride('_method'))
 app.use(morgan('dev'))
@@ -75,17 +79,36 @@ mongoose.connection.on('error', (err) => {
 // * -------- Error Handling --------
 app.use((err, req, res, next) => {
   console.error('❌ Server error:', err)
-  res.status(500).render('error', { 
-    message: 'Something went wrong!',
-    error: process.env.NODE_ENV === 'development' ? err : {}
-  })
+  
+  // Try to render error page, fallback to JSON if it fails
+  try {
+    res.status(500).render('error', { 
+      message: 'Something went wrong!',
+      error: process.env.NODE_ENV === 'development' ? err : {}
+    })
+  } catch (renderError) {
+    console.error('❌ Error rendering error page:', renderError)
+    res.status(500).json({
+      error: 'Something went wrong!',
+      message: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
+    })
+  }
 })
 
 // 404 handler
 app.use((req, res) => {
-  res.status(404).render('error', { 
-    message: 'Page not found' 
-  })
+  // Try to render error page, fallback to JSON if it fails
+  try {
+    res.status(404).render('error', { 
+      message: 'Page not found' 
+    })
+  } catch (renderError) {
+    console.error('❌ Error rendering 404 page:', renderError)
+    res.status(404).json({
+      error: 'Page not found',
+      message: 'The requested page could not be found'
+    })
+  }
 })
 
 // Export for Netlify Functions

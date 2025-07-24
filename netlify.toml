@@ -3,7 +3,7 @@
   publish = "public"
 
 [functions]
-  external_node_modules = ["express", "ejs", "mongoose", "bcrypt", "multer"]
+  external_node_modules = ["express", "ejs", "mongoose", "bcrypt", "multer", "connect-mongo", "express-session", "method-override", "morgan"]
   node_bundler = "esbuild"
   included_files = ["views/**", "public/**", "middleware/**", "controllers/**", "models/**", "utils/**"]
 
