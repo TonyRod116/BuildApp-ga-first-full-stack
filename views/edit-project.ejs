@@ -45,14 +45,16 @@
         </form>
         
         <% if (project.images && project.images.length > 0) { %>
-            <div class="current-images" style="margin: 1em 0; text-align: center;">
-                <label style="display: block; margin-bottom: 0.5em">Delete current images:</label>
-                <div style="display: flex; gap: 0.5em; justify-content: center; flex-wrap: wrap; max-width: 100%;">
+            <div class="current-images" style="margin: 1em 0;">
+                <h3 style="margin-bottom: 1em; color: #333; text-align: center;">Current Images</h3>
+                <div class="portfolio-gallery" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
                     <% project.images.forEach((img, index) => { %>
-                        <div style="position: relative; display: inline-block;">
-                            <img src="<%= img %>" alt="Current Project Image" style="width: 80px; height: 80px; object-fit: cover; border-radius: 5px;"/>
-                            <form action="/client/projects/<%= project._id %>/images/<%= index %>/delete" method="POST" style="position: absolute; top: -5px; right: -5px;">
-                                <button type="submit" style="background-color: #dc3545; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center;" onclick="return confirm('Delete this image?')">×</button>
+                        <div class="portfolio-item" style="position: relative; border: 1px solid #ddd; border-radius: 8px; padding: 0.5em; background-color: #f9f9f9; max-width: 200px;">
+                            <img src="<%= img %>" alt="Current Project Image" style="width: 100%; height: 150px; object-fit: cover; border-radius: 5px;"/>
+                            
+                            <!-- Delete button -->
+                            <form action="/client/projects/<%= project._id %>/images/<%= index %>/delete" method="POST" style="position: absolute; top: 0.5em; right: 0.5em;" onsubmit="return confirm('Are you sure you want to delete this image? This action cannot be undone.');">
+                                <button type="submit" style="background-color: #dc3545; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center;">×</button>
                             </form>
                         </div>
                     <% }) %>

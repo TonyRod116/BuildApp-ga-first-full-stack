@@ -117,13 +117,30 @@ router.get('/profile', isSignedIn, async (req, res) => {
       };
     }
     
+    // Get ratings given by client (if user is a client)
+    let ratingsGiven = null;
+    if (!user.isPro) {
+      const clientRatings = await ReviewsRating.find({ 
+        userId: user.id,
+        type: 'professional'
+      });
+      
+      ratingsGiven = {
+        total: clientRatings.length,
+        average: clientRatings.length > 0 
+          ? Math.round((clientRatings.reduce((sum, r) => sum + r.rating, 0) / clientRatings.length) * 10) / 10
+          : 0
+      };
+    }
+    
     return res.render('profile', {
       user,
       clientProjects,
       clientComments,
       isPro,
       appliedProjects,
-      ratings
+      ratings,
+      ratingsGiven
     });
   } catch (error) {
     console.error('Error fetching user:', error);
@@ -131,7 +148,8 @@ router.get('/profile', isSignedIn, async (req, res) => {
       user: null,
       error: 'Error loading user',
       appliedProjects: [],
-      ratings: null
+      ratings: null,
+      ratingsGiven: null
     });
   }
 });
@@ -348,7 +366,11 @@ router.post('/projects/:id/edit', isClient, upload.array('images', 4), async (re
     project.price = parseFloat(price) || 0;
     if (req.files && req.files.length > 0) {
       const newImages = req.files.map(file => '/uploads/' + file.filename);
-      project.images = newImages;
+      // Add new images to existing ones instead of replacing
+      if (!project.images) {
+        project.images = [];
+      }
+      project.images = [...project.images, ...newImages];
     }
     await project.save();
     res.redirect('/client/projects');

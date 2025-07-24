@@ -170,11 +170,10 @@ router.post('/pro/register', async (req, res) => {
       isPro: true
     }
     
-    return res.redirect('/client/pro-list')
+    return res.redirect('/client/profile')
     
   } catch (error) {
     console.error('Registration error:', error)
-    console.error('Error details:', error.message)
     return res.render('auth/register.ejs', { 
       message: `An error occurred, please try again.`,
       isPro: true

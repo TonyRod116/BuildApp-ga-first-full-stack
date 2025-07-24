@@ -20,11 +20,14 @@
 
         <!-- Professional Header -->
         <div style="display: flex; align-items: center; gap: 2em; margin-bottom: 3em; padding: 2em; background-color: #f8f9fa; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-            <% if (professional.profilePic) { %>
-                <img src="<%= professional.profilePic %>" alt="Profile Image" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; box-shadow: 0 4px 12px rgba(0,0,0,0.2);" />
+            <% if (professional.profilePic && professional.profilePic.trim() !== '') { %>
+                <img src="<%= professional.profilePic %>" alt="Profile Image" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; box-shadow: 0 4px 12px rgba(0,0,0,0.2);" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                <div style="width: 120px; height: 120px; background: linear-gradient(145deg, #f8f9fa, #e9ecef); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: inset 2px 2px 4px #d1d5db, inset -2px -2px 4px #ffffff; border: 1px solid #dee2e6; display: none;">
+                    <span style="font-size: 4em; filter: grayscale(100%);">👤</span>
+                </div>
             <% } else { %>
-                <div style="width: 120px; height: 120px; background: linear-gradient(45deg, #ff6b35, #f7931e); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 25px rgba(255,107,53,0.4); border: 4px solid rgba(255,255,255,0.3); position: relative;">
-                    <i class="fa-solid fa-user-tie" style="font-size: 3.5em; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);"></i>
+                <div style="width: 120px; height: 120px; background: linear-gradient(145deg, #f8f9fa, #e9ecef); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: inset 2px 2px 4px #d1d5db, inset -2px -2px 4px #ffffff; border: 1px solid #dee2e6;">
+                    <span style="font-size: 4em; filter: grayscale(100%);">👤</span>
                 </div>
             <% } %>
             <div style="flex: 1;">
@@ -33,18 +36,18 @@
                 
                 <!-- Professional Type and Location -->
                 <div style="display: flex; gap: 1em; flex-wrap: wrap; margin-bottom: 0.8em;">
-                    <div style="display: flex; align-items: center; gap: 0.5em; background-color: #007bff; color: white; padding: 0.6em 1.2em; border-radius: 25px; font-size: 1em; font-weight: bold; box-shadow: 0 2px 4px rgba(0,123,255,0.2);">
+                    <div style="display: flex; align-items: center; gap: 0.5em; background-color: rgb(1, 91, 97); color: white; padding: 0.6em 1.2em; border-radius: 25px; font-size: 1em; font-weight: bold; box-shadow: 0 2px 4px rgba(1,91,97,0.2);">
                         <i class="fa-solid fa-tools" style="font-size: 0.9em;"></i>
                         <%= professional.sector || 'Profession not specified' %>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 0.5em; background-color: #28a745; color: white; padding: 0.6em 1.2em; border-radius: 25px; font-size: 1em; font-weight: bold; box-shadow: 0 2px 4px rgba(40,167,69,0.2);">
+                    <div style="display: flex; align-items: center; gap: 0.5em; background-color: rgb(1, 91, 97); color: white; padding: 0.6em 1.2em; border-radius: 25px; font-size: 1em; font-weight: bold; box-shadow: 0 2px 4px rgba(1,91,97,0.2);">
                         <i class="fa-solid fa-map-marker-alt" style="font-size: 0.9em;"></i>
                         <%= professional.location || 'Location not specified' %>
                     </div>
                 </div>
                 
                 <!-- Experience (smaller) -->
-                <div style="display: flex; align-items: center; gap: 0.5em; background-color: #ffc107; color: #333; padding: 0.4em 1em; border-radius: 20px; font-size: 0.9em; font-weight: bold; display: inline-block; box-shadow: 0 2px 4px rgba(255,193,7,0.2);">
+                <div style="display: flex; align-items: center; gap: 0.5em; background-color: rgb(1, 91, 97); color: white; padding: 0.4em 1em; border-radius: 20px; font-size: 0.9em; font-weight: bold; display: inline-block; box-shadow: 0 2px 4px rgba(1,91,97,0.2);">
                     <i class="fa-solid fa-clock" style="font-size: 0.8em;"></i>
                     <%= professional.experience || 0 %> years experience
                 </div>
@@ -91,7 +94,7 @@
                         </div>
                     </div>
                     <textarea id="ratingReview" placeholder="Write a review about your experience (optional)" style="width: 100%; padding: 0.8em; border: 1px solid #ddd; border-radius: 0.5em; resize: vertical; min-height: 80px; font-family: inherit;"></textarea>
-                    <button onclick="submitRating('<%= professional._id %>')" style="background-color: #28a745; color: white; padding: 0.8em 1.5em; border: none; border-radius: 0.5em; cursor: pointer; margin-top: 1em; font-size: 1em;">Submit Rating</button>
+                    <button onclick="submitRating('<%= professional._id %>')" style="background-color: rgb(1, 91, 97); color: white; padding: 0.8em 1.5em; border: none; border-radius: 0.5em; cursor: pointer; margin-top: 1em; font-size: 1em;">Submit Rating</button>
                 </div>
             <% } else { %>
                 <p style="color: #666; font-style: italic;">You cannot rate yourself.</p>
@@ -115,7 +118,7 @@
                                 <% if (rating.review) { %>
                                     <p style="margin: 0; color: #666; font-style: italic;">"<%= rating.review %>"</p>
                                 <% } %>
-                                <p style="margin: 0.5em 0 0 0; color: #999; font-size: 0.8em;"><%= rating.createdAt ? new Date(rating.createdAt).toLocaleDateString() : 'Recent' %></p>
+                                <p style="margin: 0.5em 0 0 0; color: #999; font-size: 0.8em;"><%= rating.createdAt ? new Date(new Date(rating.createdAt).getTime() + (2 * 60 * 60 * 1000)).toLocaleString('es-ES', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Recent' %></p>
                             </div>
                         <% }); %>
                     </div>
@@ -150,6 +153,14 @@
         let currentProjectImages = [];
         let currentImageIndex = 0;
 
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('imageModal');
+            if (event.target === modal) {
+                closeImageModal();
+            }
+        }
+
         function openImageModal(imageElement) {
             const modal = document.getElementById('imageModal');
             const modalImg = document.getElementById('modalImage');
@@ -161,6 +172,41 @@
 
             currentProjectImages = projectImagesData;
             currentImageIndex = currentIndex;
+
+            // Initialize image navigation
+            const modalContent = document.querySelector('.modal-content');
+            
+            // Remove existing navigation buttons
+            const existingPrev = modalContent.querySelector('.prev');
+            const existingNext = modalContent.querySelector('.next');
+            if (existingPrev) existingPrev.remove();
+            if (existingNext) existingNext.remove();
+
+            // Add navigation buttons
+            const prevBtn = document.createElement('span');
+            prevBtn.className = 'prev';
+            prevBtn.innerHTML = '&lt;';
+            modalContent.appendChild(prevBtn);
+
+            const nextBtn = document.createElement('span');
+            nextBtn.className = 'next';
+            nextBtn.innerHTML = '&gt;';
+            modalContent.appendChild(nextBtn);
+
+            // Add event listeners for navigation
+            prevBtn.onclick = function() { changeImage(-1); };
+            nextBtn.onclick = function() { changeImage(1); };
+        }
+
+        function changeImage(direction) {
+            currentImageIndex += direction;
+            if (currentImageIndex >= currentProjectImages.length) {
+                currentImageIndex = 0;
+            }
+            if (currentImageIndex < 0) {
+                currentImageIndex = currentProjectImages.length - 1;
+            }
+            document.getElementById('modalImage').src = currentProjectImages[currentImageIndex];
         }
 
         function closeImageModal() {

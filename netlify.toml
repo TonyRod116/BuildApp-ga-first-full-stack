@@ -1,0 +1,33 @@
+[functions]
+  external_node_modules = ["express", "ejs"]
+  node_bundler = "esbuild"
+  included_files = ["views/**", "public/**"]
+
+# Serve static files
+[[redirects]]
+  from = "/uploads/*"
+  to = "/public/uploads/:splat"
+  status = 200
+
+# Serve other static files
+[[redirects]]
+  from = "/css/*"
+  to = "/public/css/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/js/*"
+  to = "/public/js/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/stylesheets/*"
+  to = "/public/stylesheets/:splat"
+  status = 200
+
+# Catch-all redirect for API calls
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+  force = true

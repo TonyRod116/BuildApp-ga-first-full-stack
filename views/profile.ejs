@@ -19,7 +19,7 @@
             <% } %>
           </div>
           <div style="display: flex; align-items: center; gap: 1em; margin-top: 1em;">
-            <h2 style="text-align: left; margin: 0;"><%= user.name %>'s profile</h2>
+            <h2 style="text-align: left; margin: 0;">Welcome to your profile, <%= user.name %>.</h2>
             <% if (user.isPro && ratings) { %>
               <div style="display: flex; align-items: center; gap: 0.5em; background-color: #f8f9fa; padding: 0.8em 1.2em; border-radius: 8px; border: 1px solid #e9ecef;">
                 <div style="display: flex; gap: 0.2em; margin-right: 0.5em;">
@@ -92,7 +92,7 @@
                       <% if (rating.review) { %>
                         <p style="margin: 0; color: #666; font-style: italic; font-size: 0.9em;">"<%= rating.review %>"</p>
                       <% } %>
-                      <p style="margin: 0.4em 0 0 0; color: #999; font-size: 0.8em;"><%= rating.createdAt ? new Date(rating.createdAt).toLocaleDateString() : 'Recent' %></p>
+                      <p style="margin: 0.4em 0 0 0; color: #999; font-size: 0.8em;"><%= rating.createdAt ? new Date(new Date(rating.createdAt).getTime() + (2 * 60 * 60 * 1000)).toLocaleString('es-ES', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Recent' %></p>
                     </div>
                   <% }); %>
                 </div>
@@ -149,10 +149,10 @@
                       <% } %>
                       
                       <div class="project-actions" style="margin-top: 1em; display: flex; gap: 0.5em;">
-                        <div style="background-color: #28a745; color: white; padding: 0.5em 1em; border-radius: 0.3em; font-size: 0.9em;">
+                        <div style="background-color: rgb(1, 91, 97); color: white; padding: 0.5em 1em; border-radius: 0.3em; font-size: 0.9em;">
                           Applied
                         </div>
-                        <button type="button" class="btn project-action-btn" data-action="cancel" data-project-id="<%= project._id %>" style="background-color: #dc3545; color: white; padding: 0.5em 1em; border-radius: 0.3em; font-size: 0.9em; border: none; cursor: pointer;">
+                        <button type="button" class="btn project-action-btn" data-action="cancel" data-project-id="<%= project._id %>" style="background-color: #6c757d; color: white; padding: 0.5em 1em; border-radius: 0.3em; font-size: 0.9em; border: none; cursor: pointer;">
                           Cancel Application
                         </button>
                       </div>
@@ -169,10 +169,10 @@
 
           <% } else { %>
             <!-- Client Profile (existing code) -->
-            <p> has rated <%= isPro.length %> Professionals</p>
+            <p> has rated <%= ratingsGiven ? ratingsGiven.total : 0 %> Professionals</p>
             <p>has <%= clientProjects.length %> projects</p>
             <p>has commented on <%= clientComments.length %> projects</p>
-            <p>has commented on <%= isPro.length %> professionals</p>
+            <p>Average rating given: <%= ratingsGiven ? ratingsGiven.average : 0 %>/5</p>
             <a href="/client/projects"><h3>Projects</h3></a>
             <div class="client-profile-projects" style="display: flex; flex-wrap: wrap; gap: 1em; margin-top: 1em;">
               <% clientProjects.forEach(project => { %>

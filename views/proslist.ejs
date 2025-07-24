@@ -9,19 +9,22 @@
 <body>
     <%- include('partials/header') %>
     <div class="client-profile-container down-fivepercent" style="margin-left: 2em;">
-        <h2>Find Professionals Near You</h2>
+        <h2 style="text-align: center;">Find Professionals Near You</h2>
         
         <% if (professionals && professionals.length > 0) { %>
             <div class="pro-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2em; margin-top: 2em;">
                 <% professionals.forEach(pro => { %>
                     <div class="pro-card" style="border: 1px solid #ddd; padding: 1.5em; border-radius: 0.5em; background-color: #f9f9f9; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
                         <div style="display: flex; align-items: center; margin-bottom: 1em;">
-                            <div class="profile-pic-circle" style="margin-right: 1em;">
-                                <% if (pro.profilePic) { %>
-                                    <img src="<%= pro.profilePic %>" alt="Profile Image" />
+                            <div style="margin-right: 1em;">
+                                <% if (pro.profilePic && pro.profilePic.trim() !== '') { %>
+                                    <img src="<%= pro.profilePic %>" alt="Profile Image" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                                    <div style="width: 60px; height: 60px; background: linear-gradient(145deg, #f8f9fa, #e9ecef); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: inset 2px 2px 4px #d1d5db, inset -2px -2px 4px #ffffff; border: 1px solid #dee2e6; display: none;">
+                                        <span style="font-size: 2em; filter: grayscale(100%);">👤</span>
+                                    </div>
                                 <% } else { %>
-                                    <div style="width: 60px; height: 60px; background: linear-gradient(145deg, #f0f0f0, #cacaca); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 3px 3px 6px #bebebe, -3px -3px 6px #ffffff; border: 2px solid #e0e0e0;">
-                                        <i class="fa-solid fa-user-tie" style="font-size: 1.5em; color: #666; text-shadow: 1px 1px 2px rgba(0,0,0,0.1);"></i>
+                                    <div style="width: 60px; height: 60px; background: linear-gradient(145deg, #f8f9fa, #e9ecef); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: inset 2px 2px 4px #d1d5db, inset -2px -2px 4px #ffffff; border: 1px solid #dee2e6;">
+                                        <span style="font-size: 2em; filter: grayscale(100%);">👤</span>
                                     </div>
                                 <% } %>
                             </div>
