@@ -27,7 +27,7 @@
                           <% if (project.createdBy && project.createdBy.name) { %>
                             <%= project.createdBy.name %>
                           <% } else if (project.createdBy) { %>
-                            User ID: <%= project.createdBy %>
+                            <%= project.createdBy.name %>
                           <% } else { %>
                             Unknown
                           <% } %>

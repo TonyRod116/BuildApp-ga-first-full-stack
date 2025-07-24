@@ -193,7 +193,7 @@ router.post('/edit-profile', isSignedIn, upload.single('profilePic'), async (req
 router.get('/projects', isClient, async (req, res) => {
   try {
     const user = req.session.user;
-    const projects = await Project.find({ createdBy: user.id });
+    const projects = await Project.find({ createdBy: user.id }).populate('createdBy', 'name');
     
     // Load comments
     const projectsWithComments = await Promise.all(projects.map(async (project) => {

@@ -36,7 +36,7 @@
           </div>
           <a href="/client/edit-profile" style="text-decoration: none; color: blue; font-size: 0.8em;">Edit your profile</a>
         </div>
-        <div class="client-profile-right">
+        <div class="client-profile-right" style="margin-right: 2em;">
           <% if (user.isPro) { %>
             <!-- Professional Profile -->
             <div class="pro-info" style="margin-bottom: 2em;">
@@ -173,7 +173,7 @@
             <p>has <%= clientProjects.length %> projects</p>
             <p>has commented on <%= clientComments.length %> projects</p>
             <p>Average rating given: <%= ratingsGiven ? ratingsGiven.average : 0 %>/5</p>
-            <a href="/client/projects"><h3>Projects</h3></a>
+            <a href="/client/projects"><h3>My Projects</h3></a>
             <div class="client-profile-projects" style="display: flex; flex-wrap: wrap; gap: 1em; margin-top: 1em;">
               <% clientProjects.forEach(project => { %>
                 <div class="client-profile-project" style="border: 1px solid #ddd; border-radius: 8px; padding: 1em; background-color: #f9f9f9; min-width: 200px;">
