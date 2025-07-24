@@ -15,6 +15,7 @@ import passUserToView from '../../middleware/passUserToView.js'
 import userRouter from '../../controllers/user.js'
 import authRouter from '../../controllers/auth.js'
 import serverless from 'serverless-http'
+import bodyParser from '../../middleware/bodyParser.js'
 
 
 const app = express()

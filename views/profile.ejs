@@ -7,9 +7,9 @@
     <%- include('partials/head') %>
     <script src="/js/project-actions.js"></script>
 </head>
-<body>
+<body style="margin-bottom: 4em;">
     <%- include('partials/header') %>
-    <div class="client-profile-container down-fivepercent" style="justify-content: left; margin-left: 2em;">
+    <div class="client-profile-container down-fivepercent" style="justify-content: left; margin-left: 2em; margin-bottom: 3em;">
       <div class="client-profile-container">
           <div class="profile-pic-circle">
             <% if (user.profilePic) { %>
@@ -74,7 +74,7 @@
               </div>
             <% } %>
 
-            <!-- Recent Ratings Section -->
+            <!-- Ratings Section -->
             <% if (ratings && ratings.recent && ratings.recent.length > 0) { %>
               <div class="ratings-section" style="margin-bottom: 1.8em;">
                 <h3 style="margin-bottom: 1em; color: #333; font-size: 1.2em;">Recent Reviews</h3>
@@ -127,28 +127,30 @@
             
             <!-- Applied Projects -->
             <div class="applied-projects-section">
-              <h2>Projects I've Applied To</h2>
+              <h3>Projects I've Applied To</h3>
               
               <% if (appliedProjects.length > 0) { %>
-                <div class="applied-projects-list">
+                <div class="applied-projects-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 450px)); gap: 1.5em; margin-top: 1em; margin-bottom: 3em;">
                   <% appliedProjects.forEach(project => { %>
-                    <div class="applied-project-card" style="border: 1px solid #ddd; padding: 1em; margin: 1em 0; border-radius: 0.5em; background-color: #f9f9f9;">
-                      <h3><%= project.title %></h3>
-                      <p><strong>Created by:</strong> <%= project.createdBy ? project.createdBy.name : 'Unknown' %></p>
-                      <p><strong>Type:</strong> <%= project.type %></p>
-                      <p><strong>Location:</strong> <%= project.location || 'Not specified' %></p>
-                                              <p><strong>Budget:</strong> €<%= Number(project.price).toLocaleString('es-ES') %></p>
-                      <p><strong>Description:</strong> <%= project.description || 'No description' %></p>
+                                          <div class="applied-project-card" style="border: 1px solid #ddd; padding: 1.5em; border-radius: 0.8em; background-color: #f9f9f9; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 450px;">
+                      <h3 style="margin: 0 0 0.8em 0; color: #333; font-size: 1.3em;"><%= project.title %></h3>
+                      <div style="display: flex; flex-direction: column; gap: 0.5em; margin-bottom: 1em;">
+                        <p style="margin: 0; color: #666; font-size: 0.9em;"><strong>Created by:</strong> <%= project.createdBy ? project.createdBy.name : 'Unknown' %></p>
+                        <p style="margin: 0; color: #666; font-size: 0.9em;"><strong>Type:</strong> <%= project.type %></p>
+                        <p style="margin: 0; color: #666; font-size: 0.9em;"><strong>Location:</strong> <%= project.location || 'Not specified' %></p>
+                        <p style="margin: 0; color: #666; font-size: 0.9em;"><strong>Budget:</strong> €<%= Number(project.price).toLocaleString('es-ES') %></p>
+                        <p style="margin: 0; color: #666; font-size: 0.9em;"><strong>Description:</strong> <%= project.description || 'No description' %></p>
+                      </div>
                       
                       <% if (project.images && project.images.length > 0) { %>
-                        <div class="project-gallery" style="display: flex; gap: 0.5em; margin-top: 1em;">
+                        <div class="project-gallery" style="display: flex; gap: 0.5em; margin: 1em 0; flex-wrap: wrap;">
                           <% project.images.forEach((img, index) => { %>
-                            <img src="<%= img %>" alt="Project Image" class="clickable-image" data-project-images="<%= project.images.join('|') %>" data-image-index="<%= index %>" onclick="openImageModal(this)" style="width: 100px; height: 100px; object-fit: cover; border-radius: 5px; cursor: pointer;"/>
+                            <img src="<%= img %>" alt="Project Image" class="clickable-image" data-project-images="<%= project.images.join('|') %>" data-image-index="<%= index %>" onclick="openImageModal(this)" style="width: 80px; height: 80px; object-fit: cover; border-radius: 5px; cursor: pointer;"/>
                           <% }) %>
                         </div>
                       <% } %>
                       
-                      <div class="project-actions" style="margin-top: 1em; display: flex; gap: 0.5em;">
+                      <div class="project-actions" style="margin-top: 1em; display: flex; gap: 0.5em; flex-wrap: wrap;">
                         <div style="background-color: rgb(1, 91, 97); color: white; padding: 0.5em 1em; border-radius: 0.3em; font-size: 0.9em;">
                           Applied
                         </div>

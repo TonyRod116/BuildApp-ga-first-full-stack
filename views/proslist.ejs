@@ -9,7 +9,7 @@
 <body>
     <%- include('partials/header') %>
     <div class="client-profile-container down-fivepercent" style="margin-left: 2em;">
-        <h2 style="text-align: center;">Find Professionals Near You</h2>
+        <h1 style="color: #333; margin: 0; text-align: center;">Find Professionals Near You</h1>
         
         <% if (professionals && professionals.length > 0) { %>
             <div class="pro-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2em; margin-top: 2em;">
@@ -49,7 +49,7 @@
                             </div>
                             <span style="color: #666; font-size: 0.8em;">
                                 <% if (pro.rating.total > 0) { %>
-                                    <%= pro.rating.average %> (<%= pro.rating.total %> ratings)
+                                    <%= pro.rating.average %> (<%= pro.rating.total %> <%= pro.rating.total === 1 ? 'rating' : 'ratings' %>)
                                 <% } else { %>
                                     No ratings yet
                                 <% } %>

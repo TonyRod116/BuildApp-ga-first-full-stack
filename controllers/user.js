@@ -585,12 +585,43 @@ router.get('/applications', isSignedIn, async (req, res) => {
   try {
     const user = req.session.user;
     
-    // Get all projects with their applications
-    const projects = await Project.find()
+    // Get only projects created by the current user with their applications
+    const projects = await Project.find({ createdBy: user.id })
       .populate('createdBy', 'name email')
       .populate('appliedBy', 'name email sector location experience');
     
-    // Group applications by project
+    // Get ratings for all professionals who applied
+    const professionalIds = projects.reduce((ids, project) => {
+      if (project.appliedBy) {
+        ids.push(...project.appliedBy.map(pro => pro._id));
+      }
+      return ids;
+    }, []);
+    
+    const ratings = await ReviewsRating.find({ 
+      targetUserId: { $in: professionalIds },
+      type: 'professional'
+    });
+    
+    // Calculate average rating for each professional
+    const ratingsByProfessional = {};
+    ratings.forEach(rating => {
+      if (!ratingsByProfessional[rating.targetUserId]) {
+        ratingsByProfessional[rating.targetUserId] = { total: 0, sum: 0, count: 0 };
+      }
+      ratingsByProfessional[rating.targetUserId].sum += rating.rating;
+      ratingsByProfessional[rating.targetUserId].count += 1;
+    });
+    
+    // Calculate averages
+    Object.keys(ratingsByProfessional).forEach(professionalId => {
+      const ratingData = ratingsByProfessional[professionalId];
+      ratingData.average = ratingData.count > 0 
+        ? Math.round((ratingData.sum / ratingData.count) * 10) / 10 
+        : 0;
+    });
+    
+    // Group applications by project with ratings
     const applicationsByProject = projects.map(project => ({
       project: {
         id: project._id,
@@ -600,7 +631,10 @@ router.get('/applications', isSignedIn, async (req, res) => {
         location: project.location,
         createdBy: project.createdBy
       },
-      applications: project.appliedBy || []
+      applications: (project.appliedBy || []).map(professional => ({
+        ...professional.toObject(),
+        rating: ratingsByProfessional[professional._id] || { average: 0, count: 0 }
+      }))
     }));
     
     res.render('applications', { 

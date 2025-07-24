@@ -14,7 +14,7 @@
             <h1 style="color: #333; margin: 0;">Project Applications Overview</h1>
             <div style="display: flex; gap: 1em;">
                 <div style="text-align: center; padding: 1em; background-color: #f8f9fa; border-radius: 8px; min-width: 120px;">
-                    <h3 style="margin: 0; color: #007bff;"><%= totalProjects %></h3>
+                    <h3 style="margin: 0; color: rgb(1, 91, 97);"><%= totalProjects %></h3>
                     <p style="margin: 0.2em 0 0 0; font-size: 0.9em; color: #666;">Total Projects</p>
                 </div>
                 <div style="text-align: center; padding: 1em; background-color: #f8f9fa; border-radius: 8px; min-width: 120px;">
@@ -33,7 +33,7 @@
                                 <h2 style="margin: 0 0 0.5em 0; color: #333; font-size: 1.5em;"><%= item.project.title %></h2>
                                 <div style="display: flex; gap: 2em; flex-wrap: wrap; margin-bottom: 1em;">
                                     <div style="display: flex; align-items: center; gap: 0.5em;">
-                                        <span style="background-color: #007bff; color: white; padding: 0.3em 0.8em; border-radius: 20px; font-size: 0.8em;"><%= item.project.type %></span>
+                                        <span style="background-color: rgb(1, 91, 97); color: white; padding: 0.3em 0.8em; border-radius: 20px; font-size: 0.8em;"><%= item.project.type %></span>
                                     </div>
                                     <div style="display: flex; align-items: center; gap: 0.5em;">
                                         <i class="fa-solid fa-euro-sign" style="color: #28a745;"></i>
@@ -64,12 +64,12 @@
                                         <div class="professional-card" style="border: 1px solid #e9ecef; border-radius: 8px; padding: 1em; background-color: #f8f9fa; position: relative; transition: all 0.2s ease; cursor: pointer;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
                                             <a href="/client/pro/<%= professional._id %>" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 1; opacity: 0;" title="View <%= professional.name %>'s profile"></a>
                                             <div style="display: flex; align-items: center; gap: 1em; margin-bottom: 0.5em;">
-                                                <div style="width: 40px; height: 40px; background-color: #007bff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                                                <div style="width: 40px; height: 40px; background-color: rgb(1, 91, 97); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
                                                     <%= professional.name.charAt(0).toUpperCase() %>
                                                 </div>
                                                                                             <div>
                                                 <h4 style="margin: 0; color: #333; font-size: 1em;">
-                                                    <a href="/client/pro/<%= professional._id %>" style="text-decoration: none; color: #333; transition: color 0.2s; cursor: pointer; display: inline-block; padding: 0.2em 0;" onmouseover="this.style.color='#007bff'; this.style.textDecoration='underline'" onmouseout="this.style.color='#333'; this.style.textDecoration='none'">
+                                                    <a href="/client/pro/<%= professional._id %>" style="text-decoration: none; color: #333; transition: color 0.2s; cursor: pointer; display: inline-block; padding: 0.2em 0;" onmouseover="this.style.color='rgb(1, 91, 97)'; this.style.textDecoration='underline'" onmouseout="this.style.color='#333'; this.style.textDecoration='none'">
                                                         <%= professional.name %>
                                                         <i class="fa-solid fa-external-link-alt" style="margin-left: 0.3em; font-size: 0.8em;"></i>
                                                     </a>
@@ -94,8 +94,21 @@
                                                     </span>
                                                 <% } %>
                                             </div>
+                                            
+                                            <!-- Rating Section -->
+                                            <div style="margin-top: 0.8em; display: flex; align-items: center; gap: 0.5em; padding: 0.5em; background-color: #fff3cd; border-radius: 6px; border: 1px solid #ffeaa7;">
+                                                <div style="display: flex; gap: 0.2em; margin-right: 0.5em;">
+                                                    <% for(let i = 1; i <= 5; i++) { %>
+                                                        <i class="fa-solid fa-star" style="color: <%= i <= professional.rating.average ? '#ffc107' : '#e0e0e0' %>; font-size: 0.9em;"></i>
+                                                    <% } %>
+                                                </div>
+                                                <div style="text-align: center;">
+                                                    <span style="font-weight: bold; color: #ffc107; font-size: 1em;"><%= professional.rating.average %></span>
+                                                    <span style="color: #666; font-size: 0.8em; margin-left: 0.3em;">(<%= professional.rating.count %> <%= professional.rating.count === 1 ? 'rating' : 'ratings' %>)</span>
+                                                </div>
+                                            </div>
                                             <div style="margin-top: 0.5em; text-align: center;">
-                                                <span style="background-color: #007bff; color: white; padding: 0.2em 0.5em; border-radius: 4px; font-size: 0.7em;">
+                                                <span style="background-color: rgb(1, 91, 97); color: white; padding: 0.2em 0.5em; border-radius: 4px; font-size: 0.7em;">
                                                     <i class="fa-solid fa-eye" style="margin-right: 0.2em;"></i>View Profile
                                                 </span>
                                             </div>
