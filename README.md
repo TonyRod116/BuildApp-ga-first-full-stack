@@ -96,8 +96,6 @@ The full BuildApp startup (currently in private development) will include many o
 Legal Notice:
 The BuildApp name, idea, and business concept are protected by copyright and intellectual property laws. Any reproduction or commercial use of the idea or code without my written consent is strictly prohibited.
 
-GitHub Project
-
 You can find this demo/MVP version here:
 https://github.com/TonyRod116/BuildApp-ga-first-full-stack
 
