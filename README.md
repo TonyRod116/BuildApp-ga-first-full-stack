@@ -6,6 +6,8 @@ BuildApp is a full-stack web platform developed as part of my software engineeri
 Clients can post new projects and browse professionals, while professionals can showcase their portfolios, apply to projects, and receive ratings and reviews. 
 The app was built with Node.js, Express, MongoDB (Mongoose), EJS and CSS, and supports both local and serverless (Netlify) deployment.
 
+![BuildApp Home Page](media/Home.png)
+
 Getting Started / Code Installation
 1. Clone the repository:
    git clone <repo-url>
