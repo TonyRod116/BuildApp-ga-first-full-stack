@@ -5,6 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BuildApp - Welcome</title>
     <%- include('partials/head') %>
+    <style>
+        /* Fix for white bar on home page only */
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            background: rgb(1, 91, 97) !important;
+            height: 100vh !important;
+            width: 100vw !important;
+            overflow-x: hidden;
+        }
+        
+        .home-body {
+            background: rgb(1, 91, 97) !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            min-height: 100vh !important;
+            height: 100vh !important;
+            width: 100vw !important;
+            position: relative;
+        }
+    </style>
 </head>
 <body class="home-body">
     <video id="bg-video" autoplay muted loop playsinline>
@@ -12,7 +33,7 @@
         Your browser does not support the video tag.
     </video>
     
-    <%- include('partials/home_header') %>
+
     
     <div class="home-buildapp-title">
         BuildApp
