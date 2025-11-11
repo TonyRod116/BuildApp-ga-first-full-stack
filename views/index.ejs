@@ -91,6 +91,77 @@
             color: #666;
             font-size: 0.9em;
         }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .welcome-container {
+                margin: 2em 1em;
+                padding: 1.5em;
+            }
+            
+            .welcome-title {
+                font-size: 2.2em;
+            }
+            
+            .welcome-subtitle {
+                font-size: 1.1em;
+                margin-bottom: 1.5em;
+            }
+            
+            .welcome-buttons {
+                flex-direction: column;
+                gap: 0.8em;
+            }
+            
+            .welcome-btn {
+                width: 100%;
+                padding: 0.9em 1.5em;
+            }
+            
+            .features-preview {
+                grid-template-columns: 1fr;
+                gap: 1.5em;
+                margin-top: 2em;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .welcome-container {
+                margin: 1em 0.8em;
+                padding: 1.2em;
+            }
+            
+            .welcome-title {
+                font-size: 1.8em;
+                margin-bottom: 0.4em;
+            }
+            
+            .welcome-subtitle {
+                font-size: 1em;
+                margin-bottom: 1.2em;
+            }
+            
+            .welcome-btn {
+                padding: 0.8em 1.2em;
+                font-size: 0.95em;
+            }
+            
+            .feature-preview {
+                padding: 1.2em;
+            }
+            
+            .feature-preview i {
+                font-size: 1.8em;
+            }
+            
+            .feature-preview h3 {
+                font-size: 1.1em;
+            }
+            
+            .feature-preview p {
+                font-size: 0.85em;
+            }
+        }
     </style>
 </head>
 <body>

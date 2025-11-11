@@ -1,9 +1,16 @@
 <header class="header">
-
   <div class="header-left">
     <a href="/client" class="client-header-title" style="background: linear-gradient(45deg, #FFFFFF, #FFE4B5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-shadow: none; margin-left: 1em; text-decoration: none; cursor: pointer; font-weight: bold; font-size: 1.6em;">BuildApp</a>
   </div>
-  <div class="header-right">
+  
+  <!-- Hamburger menu button for mobile -->
+  <button class="mobile-menu-toggle" aria-label="Toggle menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  
+  <div class="header-right" id="header-menu">
     <% if (user && user.isPro) { %>
       <!-- Professionals -->
       <a href="/client/projects/public" class="client-header-profile">Find new projects</a>
@@ -24,4 +31,36 @@
       <a href="/auth/login" class="client-header-sign-up-off">Log in</a>
     <% } %>
   </div>
-</header> 
+</header>
+
+<script>
+  // Mobile menu toggle
+  document.addEventListener('DOMContentLoaded', function() {
+    const menuToggle = document.querySelector('.mobile-menu-toggle');
+    const headerMenu = document.getElementById('header-menu');
+    
+    if (menuToggle && headerMenu) {
+      menuToggle.addEventListener('click', function() {
+        headerMenu.classList.toggle('active');
+        menuToggle.classList.toggle('active');
+      });
+      
+      // Close menu when clicking on a link
+      const menuLinks = headerMenu.querySelectorAll('a');
+      menuLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          headerMenu.classList.remove('active');
+          menuToggle.classList.remove('active');
+        });
+      });
+      
+      // Close menu when clicking outside
+      document.addEventListener('click', function(event) {
+        if (!headerMenu.contains(event.target) && !menuToggle.contains(event.target)) {
+          headerMenu.classList.remove('active');
+          menuToggle.classList.remove('active');
+        }
+      });
+    }
+  });
+</script> 
