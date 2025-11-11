@@ -4,15 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Client Login</title>
+    <%- include('partials/head') %>
+    <style>
+        body {
+            padding: 2em 1em;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        
+        p {
+            text-align: center;
+            color: #666;
+            margin-bottom: 2em;
+        }
+        
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 1em 0.5em;
+            }
+            
+            h1 {
+                font-size: 1.5em;
+            }
+            
+            form {
+                max-width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
+    <%- include('partials/header') %>
     <h1>Welcome aboard!</h1>
     <p>Please fill in the following information to create your account.</p>
-    <form action="/auth/client/register" method="post">
+    <form action="/auth/client/register" method="post" class="form">
         <label for="name">Name</label>
         <input type="text" name="name" id="name" required>
         <label for="email">Email</label>
         <input type="email" name="email" id="email" required>
+        <button type="submit">Register</button>
     </form>
 </body>
 </html>
