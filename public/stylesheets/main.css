@@ -859,3 +859,238 @@ body.home-body html {
   }
 }
 
+/* ===== PROJECTS PAGE RESPONSIVE STYLES ===== */
+@media (max-width: 768px) {
+  .client-profile-container[style*="margin-left: 2em"] {
+    margin-left: 1em !important;
+    margin-right: 1em !important;
+    padding: 0 0.5em;
+  }
+  
+  .projects-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1em !important;
+  }
+  
+  .project-card {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 1em !important;
+  }
+  
+  .project-card h3 {
+    font-size: 1.2em !important;
+  }
+  
+  .project-card p {
+    font-size: 0.9em !important;
+    margin: 0.4em 0 !important;
+  }
+  
+  .project-gallery {
+    flex-wrap: wrap !important;
+    gap: 0.4em !important;
+  }
+  
+  .project-gallery img {
+    width: 80px !important;
+    height: 80px !important;
+  }
+  
+  .project-actions {
+    flex-direction: column !important;
+    gap: 0.5em !important;
+  }
+  
+  .project-actions .btn,
+  .project-actions button,
+  .project-actions form {
+    width: 100% !important;
+  }
+  
+  .project-actions button {
+    text-align: center !important;
+  }
+  
+  .project-comments {
+    margin-top: 1em !important;
+    padding-top: 0.8em !important;
+  }
+  
+  .comments-container textarea {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+    min-height: 60px !important;
+  }
+  
+  .comments-list {
+    max-height: 150px !important;
+  }
+  
+  h1 {
+    font-size: 1.5em !important;
+    padding: 0 0.5em !important;
+  }
+  
+  .btn[style*="Create New Project"] {
+    width: 100% !important;
+    text-align: center !important;
+    padding: 0.7em 1em !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .client-profile-container[style*="margin-left: 2em"] {
+    margin-left: 0.5em !important;
+    margin-right: 0.5em !important;
+    padding: 0 0.3em;
+  }
+  
+  .project-card {
+    padding: 0.8em !important;
+  }
+  
+  .project-card h3 {
+    font-size: 1.1em !important;
+  }
+  
+  .project-card p {
+    font-size: 0.85em !important;
+  }
+  
+  .project-gallery img {
+    width: 70px !important;
+    height: 70px !important;
+  }
+  
+  .project-actions .btn,
+  .project-actions button {
+    font-size: 0.85em !important;
+    padding: 0.6em 0.8em !important;
+  }
+  
+  .comments-container textarea {
+    font-size: 16px !important;
+    padding: 0.5em !important;
+  }
+  
+  .comments-container button {
+    width: 100% !important;
+    padding: 0.5em !important;
+  }
+  
+  .comment {
+    padding: 0.5em !important;
+    font-size: 0.85em !important;
+  }
+  
+  h1 {
+    font-size: 1.3em !important;
+  }
+}
+
+/* ===== PROS LIST PAGE RESPONSIVE STYLES ===== */
+@media (max-width: 768px) {
+  .pro-list[style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+    gap: 1.5em !important;
+    margin-top: 1.5em !important;
+    padding: 0 1em !important;
+  }
+  
+  .pro-card {
+    width: 100% !important;
+    padding: 1.2em !important;
+  }
+  
+  .pro-card > div[style*="display: flex"][style*="align-items: center"] {
+    flex-direction: column !important;
+    text-align: center !important;
+    align-items: center !important;
+  }
+  
+  .pro-card > div[style*="display: flex"][style*="align-items: center"] > div[style*="margin-right: 1em"] {
+    margin-right: 0 !important;
+    margin-bottom: 1em !important;
+  }
+  
+  .pro-card h3 {
+    font-size: 1.2em !important;
+    text-align: center !important;
+  }
+  
+  .pro-card p {
+    text-align: center !important;
+    font-size: 0.9em !important;
+  }
+  
+  .portfolio-gallery {
+    justify-content: center !important;
+  }
+  
+  .portfolio-gallery img {
+    width: 70px !important;
+    height: 70px !important;
+  }
+  
+  .pro-card > div[style*="margin-top: 1em"][style*="display: flex"] {
+    justify-content: center !important;
+  }
+  
+  .pro-card .btn {
+    width: 100% !important;
+    text-align: center !important;
+    padding: 0.7em 1em !important;
+  }
+  
+  h1 {
+    font-size: 1.5em !important;
+    padding: 0 0.5em !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .pro-list[style*="grid-template-columns"] {
+    gap: 1em !important;
+    padding: 0 0.5em !important;
+  }
+  
+  .pro-card {
+    padding: 1em !important;
+  }
+  
+  .pro-card h3 {
+    font-size: 1.1em !important;
+  }
+  
+  .pro-card p {
+    font-size: 0.85em !important;
+  }
+  
+  .portfolio-gallery img {
+    width: 60px !important;
+    height: 60px !important;
+  }
+  
+  .pro-card > div[style*="width: 60px"] {
+    width: 50px !important;
+    height: 50px !important;
+  }
+  
+  .pro-card > div[style*="width: 60px"] span {
+    font-size: 1.5em !important;
+  }
+  
+  h1 {
+    font-size: 1.3em !important;
+  }
+  
+  div[style*="text-align: center"][style*="padding: 3em"] {
+    padding: 2em 1em !important;
+  }
+  
+  div[style*="text-align: center"] i {
+    font-size: 2em !important;
+  }
+}
+
